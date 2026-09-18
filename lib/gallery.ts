@@ -1,10 +1,14 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { imageSize } from 'image-size'
 
 export type GalleryItem = {
   src: string
   alt: string
   permalink?: string
+  /** Present for local files only. Lets next/image reserve space and avoid layout shift. */
+  width?: number
+  height?: number
 }
 
 const IMAGE_EXT = /\.(jpe?g|png|webp|avif)$/i
@@ -21,7 +25,19 @@ function readLocalGallery(): GalleryItem[] {
     .readdirSync(dir)
     .filter((file) => IMAGE_EXT.test(file))
     .sort()
-    .map((file) => ({ src: `/gallery/${file}`, alt: labelFromFilename(file) }))
+    .map((file) => {
+      const item: GalleryItem = { src: `/gallery/${file}`, alt: labelFromFilename(file) }
+      try {
+        const { width, height } = imageSize(fs.readFileSync(path.join(dir, file)))
+        if (width && height) {
+          item.width = width
+          item.height = height
+        }
+      } catch {
+        // Unreadable header: fall back to an unsized <img> rather than dropping the image.
+      }
+      return item
+    })
 }
 
 type InstagramMedia = {

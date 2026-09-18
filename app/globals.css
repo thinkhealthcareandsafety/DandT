@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
@@ -13,13 +12,15 @@
   --cream: #f7f4ef;
   --cream-deep: #efe9e0;
   --line: #e1dad1;
-  --muted: #837b7e;
+  /* Darkened from #837b7e, which only reached 3.75:1 on cream and failed WCAG AA
+     for the 12-14px body copy it is used for. This clears AA on both cream tones. */
+  --muted: #6e676a;
   --gold: #b5915c;
   --rose: #d8bfc3;
 
-  --serif: 'Playfair Display', Georgia, serif;
-  --sans: 'DM Sans', system-ui, sans-serif;
-  --mono: 'DM Mono', ui-monospace, monospace;
+  --serif: var(--font-serif), Georgia, serif;
+  --sans: var(--font-sans), system-ui, sans-serif;
+  --mono: var(--font-mono), ui-monospace, monospace;
 
   --wrap: 1280px;
   --gutter: clamp(20px, 4vw, 48px);
@@ -542,7 +543,8 @@ blockquote em {
   border-radius: 2px;
 }
 
-.image-inner {
+.image-inner,
+.image-parallax {
   height: 100%;
   width: 100%;
 }

@@ -1,20 +1,19 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
+import { DM_Mono, DM_Sans, Playfair_Display } from 'next/font/google'
+import { siteUrl } from '@/lib/site'
 import './globals.css'
 
-const FALLBACK_SITE_URL = 'https://dreamsandthemes.in'
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
+  display: 'swap',
+})
 
-// Tolerates the env var being blank or entered without a protocol, either of which
-// would otherwise throw at build time and fail the deployment.
-function siteUrl() {
-  const value = process.env.NEXT_PUBLIC_SITE_URL?.trim()
-  if (!value) return new URL(FALLBACK_SITE_URL)
-  try {
-    return new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`)
-  } catch {
-    return new URL(FALLBACK_SITE_URL)
-  }
-}
+const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
+
+const dmMono = DM_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono', display: 'swap' })
 
 export const metadata: Metadata = {
   metadataBase: siteUrl(),
@@ -34,13 +33,13 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_IN',
     siteName: 'Dreams & Themes',
-    images: [{ url: '/dreams-hero.png', width: 1024, height: 1024, alt: 'A Dreams & Themes celebration set-up' }],
+    images: [{ url: '/og.jpg', width: 1200, height: 630, alt: 'A Dreams & Themes celebration set-up' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Dreams & Themes | Make room for magic.',
     description: 'Beautifully considered celebrations across Pune, Dehradun and Lucknow.',
-    images: ['/dreams-hero.png'],
+    images: ['/og.jpg'],
   },
   icons: {
     icon: [
@@ -75,7 +74,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${dmMono.variable}`}>
       <body className="antialiased">
         <script
           type="application/ld+json"

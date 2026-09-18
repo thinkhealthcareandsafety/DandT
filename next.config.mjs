@@ -1,10 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
-    unoptimized: true,
+    // Instagram CDN, used only when INSTAGRAM_ACCESS_TOKEN is configured.
+    remotePatterns: [{ protocol: 'https', hostname: '*.cdninstagram.com' }, { protocol: 'https', hostname: '*.fbcdn.net' }],
   },
 }
 

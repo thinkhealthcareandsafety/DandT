@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
+import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react'
 import type { GalleryItem } from '@/lib/gallery'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
@@ -61,7 +62,18 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
         {items.map((item, i) => (
           <RevealItem className="gallery-cell" key={item.src} y={18}>
             <button className="gallery-tile" onClick={() => setActive(i)} aria-label={`Open image: ${item.alt}`}>
-              <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
+              {item.width && item.height ? (
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  width={item.width}
+                  height={item.height}
+                  sizes="(max-width: 760px) 100vw, (max-width: 1080px) 50vw, 33vw"
+                />
+              ) : (
+                // Remote Instagram media: already CDN-optimised, and its dimensions are not exposed.
+                <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
+              )}
               <span className="gallery-veil" aria-hidden="true">
                 <span>{item.alt}</span>
               </span>

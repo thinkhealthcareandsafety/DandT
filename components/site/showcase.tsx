@@ -1,7 +1,9 @@
 'use client'
 
 import { motion, useScroll, useTransform } from 'motion/react'
+import Image from 'next/image'
 import { useRef } from 'react'
+import heroImage from '@/public/dreams-hero.jpg'
 import { SplitHeading } from './reveal'
 
 export function Showcase() {
@@ -13,7 +15,7 @@ export function Showcase() {
   return (
     <section className="showcase" ref={ref}>
       <motion.div className="showcase-media" style={{ y }}>
-        <img src="/dreams-hero.png" alt="" aria-hidden="true" />
+        <Image src={heroImage} alt="" aria-hidden="true" sizes="100vw" />
       </motion.div>
       <motion.div className="showcase-veil" style={{ opacity: overlay }} aria-hidden="true" />
       <div className="showcase-inner">
