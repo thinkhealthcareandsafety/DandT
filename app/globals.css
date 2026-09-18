@@ -1147,11 +1147,114 @@ blockquote em {
   margin-top: 6px;
 }
 
-.field label {
+.field label,
+.field-label {
   font: 400 9.5px var(--mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+/* ------------------------------- select field ------------------------------ */
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 9px 0;
+  font: 400 14px var(--sans);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.4s var(--ease);
+}
+
+.select-trigger:hover,
+.select-trigger[data-popup-open] {
+  border-color: var(--plum);
+}
+
+.select-icon {
+  display: inline-flex;
+  color: var(--plum);
+  transition: transform 0.4s var(--ease);
+}
+
+.select-trigger[data-popup-open] .select-icon {
+  transform: rotate(180deg);
+}
+
+.select-positioner {
+  z-index: 520;
+  /* Base UI exposes the trigger width so the popup can match it exactly. */
+  width: var(--anchor-width);
+  outline: none;
+}
+
+.select-popup {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: min(320px, var(--available-height, 320px));
+  overflow-y: auto;
+  padding: 7px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 28px 54px -28px rgba(42, 37, 48, 0.45), 0 2px 6px -2px rgba(42, 37, 48, 0.12);
+  transform-origin: var(--transform-origin, top center);
+  transition: opacity 0.24s var(--ease), transform 0.24s var(--ease);
+  outline: none;
+}
+
+/* `data-closed` must carry the hidden state, not just the transient `data-ending-style`:
+   Base UI unmounts on transitionend, so without a real value change here nothing
+   transitions, nothing unmounts, and the popup stays on screen after closing. */
+.select-popup[data-starting-style],
+.select-popup[data-ending-style],
+.select-popup[data-closed] {
+  opacity: 0;
+  transform: scale(0.96) translateY(-6px);
+  pointer-events: none;
+}
+
+.select-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: 5px;
+  font: 400 13.5px var(--sans);
+  color: var(--ink);
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  transition: background 0.22s var(--ease), color 0.22s var(--ease);
+}
+
+.select-item[data-highlighted] {
+  background: color-mix(in srgb, var(--rose) 38%, transparent);
+}
+
+.select-item[data-selected] {
+  color: var(--plum);
+}
+
+.select-indicator {
+  display: inline-flex;
+  color: var(--plum);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .select-popup,
+  .select-icon {
+    transition: none;
+  }
 }
 
 .field input,

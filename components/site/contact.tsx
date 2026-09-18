@@ -4,6 +4,7 @@ import { ArrowUpRight, MapPin, Phone } from 'lucide-react'
 import { useState } from 'react'
 import { Magnetic } from './magnetic'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
+import { SelectField } from './select-field'
 
 const contacts = [
   { name: 'Pakhi', number: '9559507878' },
@@ -12,6 +13,7 @@ const contacts = [
 ]
 
 const occasions = ['Birthday', 'Theme party', 'Soft play rental', 'Corporate / school', 'Something else']
+const cities = ['Pune', 'Dehradun', 'Lucknow', 'Outstation']
 
 export function Contact() {
   const [name, setName] = useState('')
@@ -52,25 +54,14 @@ export function Contact() {
             />
           </RevealItem>
           <RevealItem className="field">
-            <label htmlFor="enq-occasion">Occasion</label>
-            <select id="enq-occasion" value={occasion} onChange={(e) => setOccasion(e.target.value)}>
-              {occasions.map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </select>
+            <SelectField label="Occasion" value={occasion} onValueChange={setOccasion} items={occasions} />
           </RevealItem>
           <RevealItem className="field">
             <label htmlFor="enq-date">Date</label>
             <input id="enq-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           </RevealItem>
           <RevealItem className="field">
-            <label htmlFor="enq-city">City</label>
-            <select id="enq-city" value={city} onChange={(e) => setCity(e.target.value)}>
-              <option>Pune</option>
-              <option>Dehradun</option>
-              <option>Lucknow</option>
-              <option>Outstation</option>
-            </select>
+            <SelectField label="City" value={city} onValueChange={setCity} items={cities} />
           </RevealItem>
           <RevealItem className="field field-full">
             <Magnetic strength={0.22}>
