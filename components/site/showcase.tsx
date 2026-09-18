@@ -1,0 +1,39 @@
+'use client'
+
+import { motion, useScroll, useTransform } from 'motion/react'
+import { useRef } from 'react'
+import { SplitHeading } from './reveal'
+
+export function Showcase() {
+  const ref = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
+  const y = useTransform(scrollYProgress, [0, 1], ['-12%', '12%'])
+  const overlay = useTransform(scrollYProgress, [0, 0.5, 1], [0.76, 0.58, 0.76])
+
+  return (
+    <section className="showcase" ref={ref}>
+      <motion.div className="showcase-media" style={{ y }}>
+        <img src="/dreams-hero.png" alt="" aria-hidden="true" />
+      </motion.div>
+      <motion.div className="showcase-veil" style={{ opacity: overlay }} aria-hidden="true" />
+      <div className="showcase-inner">
+        <span className="quote-mark">“</span>
+        <blockquote>
+          <SplitHeading>The smallest details often make</SplitHeading>
+          <br />
+          <em>
+            <SplitHeading delay={0.1}>the biggest memories.</SplitHeading>
+          </em>
+        </blockquote>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: 0.5 }}
+        >
+          — The Dreams &amp; Themes philosophy
+        </motion.p>
+      </div>
+    </section>
+  )
+}
