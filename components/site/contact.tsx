@@ -29,7 +29,7 @@ export function Contact() {
   return (
     <section className="contact section-pad" id="contact">
       <div className="contact-copy">
-        <Reveal className="section-kicker">08 &nbsp; Let&apos;s make it memorable</Reveal>
+        <Reveal className="section-kicker">Let&apos;s make it memorable</Reveal>
         <h2>
           <SplitHeading>Have a dream</SplitHeading>
           <br />
@@ -51,6 +51,8 @@ export function Contact() {
               onChange={(e) => setName(e.target.value)}
               placeholder="Riya Sharma"
               autoComplete="name"
+              autoCapitalize="words"
+              enterKeyHint="next"
             />
           </RevealItem>
           <RevealItem className="field">
@@ -96,7 +98,7 @@ export function Contact() {
                 <small>Celebration curator</small>
               </span>
               <span className="phone-number">
-                {contact.number} <Phone size={15} />
+                +91 {contact.number.slice(0, 5)} {contact.number.slice(5)} <Phone size={15} />
               </span>
             </a>
           ))}

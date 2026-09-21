@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowUpRight, Check } from 'lucide-react'
+import { useRef, useState } from 'react'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
 
 const tiers = [
@@ -40,11 +41,41 @@ const tiers = [
 ]
 
 export function Packages() {
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState(0)
+
+  // The scroller is positioned, so each card's offsetLeft is measured from it. Cards snap
+  // to its padding edge, so that is where a card's scroll position begins.
+  const cards = () => Array.from(scrollerRef.current?.querySelectorAll<HTMLElement>('.tier-grid > div') ?? [])
+  const snapLeft = (scroller: HTMLElement, card: HTMLElement) =>
+    card.offsetLeft - parseFloat(getComputedStyle(scroller).paddingLeft)
+
+  const handleScroll = () => {
+    const scroller = scrollerRef.current
+    if (!scroller) return
+    let nearest = 0
+    let best = Infinity
+    cards().forEach((card, i) => {
+      const distance = Math.abs(snapLeft(scroller, card) - scroller.scrollLeft)
+      if (distance < best) {
+        best = distance
+        nearest = i
+      }
+    })
+    setActive(nearest)
+  }
+
+  const scrollToCard = (i: number) => {
+    const scroller = scrollerRef.current
+    const card = cards()[i]
+    if (scroller && card) scroller.scrollTo({ left: snapLeft(scroller, card), behavior: 'smooth' })
+  }
+
   return (
     <section className="packages section-pad" id="packages">
       <div className="section-head">
         <div>
-          <Reveal className="section-kicker">06 &nbsp; Ways to celebrate</Reveal>
+          <Reveal className="section-kicker">Ways to celebrate</Reveal>
           <h2>
             <SplitHeading>Simple packages.</SplitHeading>
             <br />
@@ -58,6 +89,8 @@ export function Packages() {
         </Reveal>
       </div>
 
+      {/* On phones this becomes a swipeable, snapping row; on larger screens it is a plain grid. */}
+      <div className="tier-scroller" ref={scrollerRef} onScroll={handleScroll}>
       <RevealGroup className="tier-grid" stagger={0.1}>
         {tiers.map((tier) => (
           <RevealItem key={tier.name}>
@@ -83,6 +116,21 @@ export function Packages() {
           </RevealItem>
         ))}
       </RevealGroup>
+      </div>
+
+      <div className="tier-dots" role="group" aria-label="Choose a package">
+        {tiers.map((tier, i) => (
+          <button
+            key={tier.name}
+            className={i === active ? 'is-active' : undefined}
+            onClick={() => scrollToCard(i)}
+            aria-label={`Show ${tier.name}`}
+            aria-current={i === active}
+          >
+            <span />
+          </button>
+        ))}
+      </div>
     </section>
   )
 }

@@ -32,8 +32,22 @@ export function Faq() {
 
   return (
     <section className="faq section-pad" id="faq">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqs.map((faq) => ({
+              '@type': 'Question',
+              name: faq.q,
+              acceptedAnswer: { '@type': 'Answer', text: faq.a },
+            })),
+          }),
+        }}
+      />
       <div className="faq-head">
-        <Reveal className="section-kicker">07 &nbsp; Good to know</Reveal>
+        <Reveal className="section-kicker">Good to know</Reveal>
         <h2>
           <SplitHeading>Questions,</SplitHeading>
           <br />

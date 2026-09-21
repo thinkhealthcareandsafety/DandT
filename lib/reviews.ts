@@ -70,12 +70,22 @@ export async function getReviews(): Promise<ReviewData> {
 
   const { PLACEHOLDER_REVIEWS } = await import('@/content/reviews')
 
+  // Placeholder entries exist only to design the layout. Production drops them, so the
+  // section is hidden until real customer words are added — never shown as "Placeholder".
   if (process.env.NODE_ENV === 'production') {
-    console.warn(
-      '[reviews] Serving placeholder reviews. Replace content/reviews.ts with real customer words, ' +
-        'or set GOOGLE_PLACES_API_KEY and GOOGLE_PLACE_ID, before this site goes live.',
-    )
+    const real = PLACEHOLDER_REVIEWS.filter((review) => !isPlaceholder(review))
+    if (!real.length) {
+      console.warn(
+        '[reviews] No real reviews yet, so the reviews section is hidden. Add real customer words to ' +
+          'content/reviews.ts, or set GOOGLE_PLACES_API_KEY and GOOGLE_PLACE_ID.',
+      )
+    }
+    return { reviews: real, average: null, total: null, source: 'placeholder' }
   }
 
   return { reviews: PLACEHOLDER_REVIEWS, average: null, total: null, source: 'placeholder' }
+}
+
+function isPlaceholder(review: Review) {
+  return review.quote.startsWith('Placeholder') || review.name === 'Customer name'
 }

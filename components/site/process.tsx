@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'motion/react'
+import { type MotionStyle, motion, useScroll, useTransform } from 'motion/react'
 import { useRef } from 'react'
 import { ArcLine } from './decor'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
@@ -34,7 +34,7 @@ export function Process() {
       <ArcLine className="process-arc" />
       <div className="process section-pad">
       <div className="process-heading">
-        <Reveal className="section-kicker">01 &nbsp; How it works</Reveal>
+        <Reveal className="section-kicker">How it works</Reveal>
         <h2>
           <SplitHeading>Four easy steps.</SplitHeading>
           <br />
@@ -45,8 +45,9 @@ export function Process() {
       </div>
 
       <div className="process-track" ref={ref}>
+        {/* Progress is exposed as a variable so CSS can draw it across (desktop) or down (phones). */}
         <div className="process-line" aria-hidden="true">
-          <motion.span style={{ scaleX: lineScale }} />
+          <motion.span style={{ '--p': lineScale } as MotionStyle} />
         </div>
         <RevealGroup className="process-steps" stagger={0.12}>
           {steps.map((step, i) => (

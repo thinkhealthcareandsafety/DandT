@@ -80,7 +80,7 @@ export function Themes() {
     <section className="themes section-pad" id="themes">
       <div className="section-head">
         <div>
-          <Reveal className="section-kicker">02 &nbsp; Themes we love</Reveal>
+          <Reveal className="section-kicker">Themes we love</Reveal>
           <h2>
             <SplitHeading>Pick a world.</SplitHeading>
             <br />

@@ -84,45 +84,28 @@ export function Hero() {
             Explore our services <span>↗</span>
           </a>
         </motion.div>
-
-        <motion.div
-          className="hero-note"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.1, delay: 1.25, ease }}
-        >
-          <div className="avatar-stack">
-            <span>✦</span>
-            <span>✧</span>
-            <span>♡</span>
-          </div>
-          <p>
-            <strong>Celebrations, curated with care.</strong>
-            <br />
-            From the first idea to the last little detail.
-          </p>
-        </motion.div>
-
-        <motion.ul
-          className="hero-trust"
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.4, ease }}
-        >
-          <li>
-            <strong>Set-ups from ₹7,000</strong>
-            <span>Transparent, itemised quotes</span>
-          </li>
-          <li>
-            <strong>Same-team delivery</strong>
-            <span>We design, build and clean up</span>
-          </li>
-          <li>
-            <strong>Soft play specialists</strong>
-            <span>Sanitised before every party</span>
-          </li>
-        </motion.ul>
       </motion.div>
+
+      {/* A sibling of the copy (not inside it) so phones can place it under the photo, like a caption. */}
+      <motion.ul
+        className="hero-trust"
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 1.25, ease }}
+      >
+        <li>
+          <strong>Set-ups from ₹7,000</strong>
+          <span>Transparent, itemised quotes</span>
+        </li>
+        <li>
+          <strong>Same-team delivery</strong>
+          <span>We design, build and clean up</span>
+        </li>
+        <li>
+          <strong>Soft play specialists</strong>
+          <span>Sanitised before every party</span>
+        </li>
+      </motion.ul>
 
       <div className="hero-visual">
         <motion.div
