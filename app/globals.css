@@ -27,6 +27,14 @@
   --top-h: 116px;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
+  /* One radius, one surface, one lift, one rhythm. Every card, image and panel on
+     the page uses these, so the sections read as a single system. */
+  --radius: 6px;
+  --surface: rgba(255, 255, 255, 0.72);
+  --shadow-lift: 0 30px 56px -32px rgba(42, 37, 48, 0.42);
+  --section-y: clamp(72px, 8.5vw, 112px);
+  --head-gap: clamp(40px, 5vw, 60px);
+
   color-scheme: light;
 }
 
@@ -97,7 +105,7 @@ blockquote em {
 .section-pad {
   max-width: var(--wrap);
   margin: auto;
-  padding: clamp(80px, 10vw, 132px) var(--gutter);
+  padding: var(--section-y) var(--gutter);
 }
 
 .eyebrow,
@@ -106,6 +114,45 @@ blockquote em {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--plum);
+}
+
+/* Shared section header: title block left, intro copy right, bottom-aligned. */
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 50px;
+  margin-bottom: var(--head-gap);
+}
+
+.section-head h2 {
+  margin-top: 20px;
+}
+
+.section-head p {
+  max-width: 330px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--muted);
+  margin: 0;
+}
+
+.section-head p a {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 4px;
+  font-size: 12px;
+  transition: color 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+
+.section-head p a:hover {
+  color: var(--plum);
+  border-color: var(--plum);
 }
 
 .eyebrow {
@@ -300,11 +347,13 @@ blockquote em {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 11px;
   border: 1px solid var(--ink);
   border-radius: 999px;
   padding: 11px 18px;
   transition: background 0.4s var(--ease), color 0.4s var(--ease);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .nav-cta:hover {
@@ -540,7 +589,7 @@ blockquote em {
   height: 100%;
   overflow: hidden;
   background: var(--cream-deep);
-  border-radius: 2px;
+  border-radius: var(--radius);
 }
 
 .image-inner,
@@ -712,98 +761,34 @@ blockquote em {
 }
 
 /* -------------------------------- the story -------------------------------- */
-.intro {
-  display: grid;
-  grid-template-columns: 26% 1fr;
-  row-gap: clamp(60px, 8vw, 100px);
-}
 
 .section-kicker {
   padding-top: 14px;
 }
 
-.intro-content {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: clamp(40px, 6vw, 80px);
-}
 
-.intro-body {
-  max-width: 380px;
-  padding-bottom: 6px;
-}
 
-.fill-text {
-  font: 400 clamp(1rem, 1.5vw, 1.15rem) / 1.75 var(--sans);
-  color: var(--ink);
-  margin: 0 0 28px;
-}
 
-.fill-word {
-  display: inline;
-}
 
-.intro-body p,
-.services-heading > div + div p,
 .contact-copy > div p {
   color: var(--muted);
 }
 
-.stat-row {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--line);
-}
 
-.stat {
-  padding: clamp(28px, 4vw, 44px) 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
-.stat-value {
-  font: 400 clamp(3rem, 6vw, 5rem) var(--serif);
-  line-height: 0.9;
-  letter-spacing: -0.05em;
-  color: var(--plum);
-}
 
-.stat-label {
-  font: 400 10px var(--mono);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
 
 /* -------------------------------- services -------------------------------- */
-.services-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 50px;
-  margin-bottom: clamp(44px, 6vw, 68px);
-}
 
-.services-heading h2 {
-  margin-top: 20px;
-}
 
-.services-heading p {
-  max-width: 290px;
-  font-size: 14px;
-  line-height: 1.75;
-  color: var(--muted);
-  margin: 0;
-}
 
 .service-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid var(--line);
   border-left: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
 .service-grid > div {
@@ -901,7 +886,7 @@ blockquote em {
 
 .showcase-media {
   position: absolute;
-  inset: -14% 0;
+  inset: -18% 0;
 }
 
 .showcase-media img {
@@ -951,7 +936,7 @@ blockquote em {
 
 /* --------------------------------- process -------------------------------- */
 .process-heading {
-  margin-bottom: clamp(50px, 7vw, 80px);
+  margin-bottom: var(--head-gap);
 }
 
 .process-heading h2 {
@@ -1204,7 +1189,7 @@ blockquote em {
   padding: 7px;
   background: var(--cream);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius);
   box-shadow: 0 28px 54px -28px rgba(42, 37, 48, 0.45), 0 2px 6px -2px rgba(42, 37, 48, 0.12);
   transform-origin: var(--transform-origin, top center);
   transition: opacity 0.24s var(--ease), transform 0.24s var(--ease);
@@ -1318,7 +1303,7 @@ blockquote em {
   background: var(--ink);
   color: #f8f4f0;
   padding: clamp(28px, 4vw, 42px);
-  border-radius: 3px;
+  border-radius: var(--radius);
   position: sticky;
   top: calc(var(--top-h) + 20px);
 }
@@ -1588,25 +1573,8 @@ body::before {
   position: relative;
 }
 
-.themes-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 50px;
-  margin-bottom: clamp(38px, 5vw, 58px);
-}
 
-.themes-head h2 {
-  margin-top: 20px;
-}
 
-.themes-head p {
-  max-width: 320px;
-  font-size: 14px;
-  line-height: 1.75;
-  color: var(--muted);
-  margin: 0;
-}
 
 .theme-list {
   position: relative;
@@ -1691,7 +1659,7 @@ body::before {
   aspect-ratio: 3 / 4;
   /* `translate` composes separately from the transform Motion animates (scale, rotate). */
   translate: -50% -62%;
-  border-radius: 6px;
+  border-radius: var(--radius);
   overflow: hidden;
   box-shadow: 0 40px 70px -30px rgba(42, 37, 48, 0.55);
   background: var(--cream-deep);
@@ -1750,7 +1718,7 @@ body::before {
     display: block;
     width: 84px;
     aspect-ratio: 3 / 4;
-    border-radius: 5px;
+    border-radius: var(--radius);
     overflow: hidden;
   }
 
@@ -1763,52 +1731,29 @@ body::before {
 }
 
 /* --------------------------------- gallery --------------------------------- */
-.gallery-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 50px;
-  margin-bottom: clamp(36px, 5vw, 56px);
-}
 
-.gallery-head h2 {
-  margin-top: 20px;
-}
 
-.gallery-head p {
-  max-width: 330px;
-  font-size: 14px;
-  line-height: 1.75;
-  color: var(--muted);
-  margin: 0;
-}
 
-.gallery-head p a {
-  display: flex;
-  width: fit-content;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  color: var(--ink);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 4px;
-  font-size: 12px;
-  transition: color 0.4s var(--ease), border-color 0.4s var(--ease);
-}
 
-.gallery-head p a:hover {
-  color: var(--plum);
-  border-color: var(--plum);
-}
+
+
 
 .gallery-grid {
-  columns: 3;
-  column-gap: clamp(12px, 1.6vw, 20px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: clamp(220px, 25vw, 340px);
+  grid-auto-flow: dense;
+  gap: clamp(12px, 1.6vw, 20px);
+}
+
+/* The lead photo spans two rows, so eleven images tile three columns (and two)
+   with no holes — the old masonry left a ragged gap at the bottom. */
+.gallery-cell:first-child {
+  grid-row: span 2;
 }
 
 .gallery-cell {
-  break-inside: avoid;
-  margin-bottom: clamp(12px, 1.6vw, 20px);
+  height: 100%;
 }
 
 .gallery-tile {
@@ -1818,17 +1763,19 @@ body::before {
   padding: 0;
   border: 0;
   background: var(--cream-deep);
-  border-radius: 4px;
+  border-radius: var(--radius);
   overflow: hidden;
   cursor: pointer;
   line-height: 0;
+  height: 100%;
 }
 
 .gallery-tile img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
   transition: transform 1.1s var(--ease), filter 0.7s var(--ease);
+  object-fit: cover;
 }
 
 .gallery-tile:hover img {
@@ -1888,7 +1835,7 @@ body::before {
   max-width: 100%;
   max-height: 76vh;
   object-fit: contain;
-  border-radius: 3px;
+  border-radius: var(--radius);
   display: block;
   margin: auto;
 }
@@ -1955,43 +1902,13 @@ body::before {
 }
 
 /* --------------------------------- reviews --------------------------------- */
-.reviews-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 50px;
-  margin-bottom: clamp(36px, 5vw, 56px);
-}
 
-.reviews-head h2 {
-  margin-top: 20px;
-}
 
 .reviews-intro {
-  max-width: 300px;
-  font-size: 14px;
-  line-height: 1.75;
-  color: var(--muted);
-  margin: 0;
+  /* Layout comes from .section-head p. */
 }
 
-.reviews-intro a {
-  display: flex;
-  width: fit-content;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  color: var(--ink);
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 4px;
-  font-size: 12px;
-  transition: color 0.4s var(--ease), border-color 0.4s var(--ease);
-}
 
-.reviews-intro a:hover {
-  color: var(--plum);
-  border-color: var(--plum);
-}
 
 .rating-badge {
   display: flex;
@@ -2051,9 +1968,9 @@ body::before {
   position: relative;
   width: clamp(272px, 27vw, 348px);
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.78);
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   padding: clamp(26px, 3vw, 34px);
   display: flex;
   flex-direction: column;
@@ -2064,7 +1981,7 @@ body::before {
 .review-card:hover {
   transform: translateY(-6px);
   background: #fff;
-  box-shadow: 0 30px 56px -32px rgba(42, 37, 48, 0.42);
+  box-shadow: var(--shadow-lift);
 }
 
 .review-quote-mark {
@@ -2166,32 +2083,9 @@ body::before {
   position: relative;
 }
 
-.packages-confetti {
-  position: absolute;
-  right: var(--gutter);
-  top: clamp(60px, 8vw, 100px);
-  width: clamp(120px, 15vw, 200px);
-  color: var(--gold);
-  opacity: 0.45;
-  pointer-events: none;
-}
 
-.packages-head {
-  max-width: 620px;
-  margin-bottom: clamp(38px, 5vw, 60px);
-}
 
-.packages-head h2 {
-  margin: 18px 0 22px;
-}
 
-.packages-head p {
-  font-size: 14px;
-  line-height: 1.75;
-  color: var(--muted);
-  margin: 0;
-  max-width: 48ch;
-}
 
 .tier-grid {
   display: grid;
@@ -2207,9 +2101,9 @@ body::before {
 .tier {
   position: relative;
   height: 100%;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: var(--radius);
   padding: clamp(24px, 3vw, 34px);
   display: flex;
   flex-direction: column;
@@ -2217,8 +2111,8 @@ body::before {
 }
 
 .tier:hover {
-  transform: translateY(-7px);
-  box-shadow: 0 32px 60px -34px rgba(42, 37, 48, 0.42);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lift);
 }
 
 .tier.is-featured {
@@ -2318,9 +2212,7 @@ body::before {
   align-self: flex-start;
   border-bottom: 1px solid currentColor;
   padding-bottom: 6px;
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 12.5px;
   transition: gap 0.4s var(--ease);
 }
 
@@ -2528,16 +2420,7 @@ body::before {
     display: none;
   }
 
-  .intro {
-    grid-template-columns: 1fr;
-    row-gap: 46px;
-  }
 
-  .intro-content {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 34px;
-  }
 
   .service-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2564,21 +2447,18 @@ body::before {
     position: static;
   }
 
-  .themes-head {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 26px;
-  }
 
-  .gallery-head,
-  .reviews-head {
+
+
+  .section-head {
     flex-direction: column;
     align-items: flex-start;
     gap: 24px;
   }
 
   .gallery-grid {
-    columns: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: clamp(200px, 40vw, 380px);
   }
 
   .tier-grid {
@@ -2593,9 +2473,6 @@ body::before {
     grid-template-columns: 1fr;
   }
 
-  .packages-confetti {
-    display: none;
-  }
 
   .footer-top {
     grid-template-columns: 1fr;
@@ -2625,26 +2502,9 @@ body::before {
     display: none;
   }
 
-  .services-heading {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 26px;
-  }
 
-  .stat-row {
-    grid-template-columns: 1fr;
-    gap: 4px;
-  }
 
-  .stat {
-    padding-top: 26px;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 26px;
-  }
 
-  .stat:last-child {
-    border-bottom: 0;
-  }
 
   .service-grid {
     grid-template-columns: 1fr;
@@ -2689,8 +2549,9 @@ body::before {
   }
 
   .gallery-grid {
-    columns: 1;
+    grid-auto-rows: 58vw;
   }
+
 
   .gallery-veil {
     opacity: 1;

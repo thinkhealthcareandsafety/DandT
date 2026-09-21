@@ -1,7 +1,6 @@
 'use client'
 
 import { ArrowUpRight, Check } from 'lucide-react'
-import { Confetti } from './decor'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
 
 const tiers = [
@@ -43,16 +42,17 @@ const tiers = [
 export function Packages() {
   return (
     <section className="packages section-pad" id="packages">
-      <Confetti className="packages-confetti" />
-      <div className="packages-head">
-        <Reveal className="section-kicker">06 &nbsp; Ways to celebrate</Reveal>
-        <h2>
-          <SplitHeading>Simple packages.</SplitHeading>
-          <br />
-          <em>
-            <SplitHeading delay={0.1}>Everything included.</SplitHeading>
-          </em>
-        </h2>
+      <div className="section-head">
+        <div>
+          <Reveal className="section-kicker">06 &nbsp; Ways to celebrate</Reveal>
+          <h2>
+            <SplitHeading>Simple packages.</SplitHeading>
+            <br />
+            <em>
+              <SplitHeading delay={0.1}>Everything included.</SplitHeading>
+            </em>
+          </h2>
+        </div>
         <Reveal delay={0.15}>
           <p>Every celebration is quoted to your space and guest list — these are the shapes we usually start from.</p>
         </Reveal>

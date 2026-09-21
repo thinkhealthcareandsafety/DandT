@@ -83,7 +83,7 @@ export function Reviews({ data }: { data: ReviewData }) {
 
   return (
     <section className="reviews section-pad" id="reviews">
-      <div className="reviews-head">
+      <div className="section-head">
         <div>
           <Reveal className="section-kicker">05 &nbsp; Kind words</Reveal>
           <h2>

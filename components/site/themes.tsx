@@ -78,7 +78,7 @@ export function Themes() {
 
   return (
     <section className="themes section-pad" id="themes">
-      <div className="themes-head">
+      <div className="section-head">
         <div>
           <Reveal className="section-kicker">02 &nbsp; Themes we love</Reveal>
           <h2>

@@ -37,7 +37,7 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
 
   return (
     <section className="gallery section-pad" id="gallery">
-      <div className="gallery-head">
+      <div className="section-head">
         <div>
           <Reveal className="section-kicker">04 &nbsp; The lookbook</Reveal>
           <h2>

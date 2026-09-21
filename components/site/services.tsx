@@ -35,7 +35,7 @@ export function Services() {
 
   return (
     <section className="services section-pad" id="services">
-      <div className="services-heading">
+      <div className="section-head">
         <div>
           <Reveal className="section-kicker">03 &nbsp; Our specialties</Reveal>
           <h2>
