@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowUpRight, Sparkles } from 'lucide-react'
+import { ArrowUpRight, MessageCircle, Phone, Sparkles } from 'lucide-react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { Magnetic } from './magnetic'
@@ -21,8 +21,11 @@ export function Nav() {
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    if (open) window.addEventListener('keydown', onKey)
     return () => {
       document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
     }
   }, [open])
 
@@ -40,7 +43,9 @@ export function Nav() {
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="announcement">
-          <Sparkles size={13} /> Thoughtfully planned celebrations, wherever you are.
+          <Sparkles size={13} />
+          <span className="announcement-long">Thoughtfully planned celebrations, wherever you are.</span>
+          <span className="announcement-short">Thoughtfully planned celebrations</span>
         </div>
         <div className="nav-wrap">
         <a href="#top" className="brand" aria-label="Dreams and Themes home">
@@ -89,7 +94,7 @@ export function Nav() {
               animate="show"
               variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07, delayChildren: 0.25 } } }}
             >
-              {links.map((link) => (
+              {links.map((link, i) => (
                 <motion.a
                   key={link.href}
                   href={link.href}
@@ -99,17 +104,30 @@ export function Nav() {
                     show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
                   }}
                 >
+                  <small>{String(i + 1).padStart(2, '0')}</small>
                   {link.label}
                 </motion.a>
               ))}
             </motion.nav>
             <motion.div
               className="nav-overlay-foot"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, transition: { delay: 0.55, duration: 0.6 } }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0, transition: { delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] } }}
             >
+              <div className="nav-overlay-actions">
+                <a
+                  className="nav-overlay-wa"
+                  href="https://wa.me/919559507878?text=Hi%20Dreams%20%26%20Themes!%20I'd%20love%20to%20plan%20a%20celebration."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MessageCircle size={17} /> WhatsApp us
+                </a>
+                <a className="nav-overlay-call" href="tel:+919559507878" aria-label="Call +91 95595 07878">
+                  <Phone size={17} />
+                </a>
+              </div>
               <span>Pune · Dehradun · Lucknow</span>
-              <a href="tel:9559507878">+91 95595 07878</a>
             </motion.div>
           </motion.div>
         )}

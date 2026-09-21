@@ -39,7 +39,7 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
     <section className="gallery section-pad" id="gallery">
       <div className="section-head">
         <div>
-          <Reveal className="section-kicker">04 &nbsp; The lookbook</Reveal>
+          <Reveal className="section-kicker">The lookbook</Reveal>
           <h2>
             <SplitHeading>Moments we</SplitHeading>
             <br />
@@ -114,10 +114,23 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
+              // Swipe between photos on touch screens; the arrows remain for mouse and keyboard.
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.5}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -60 || info.velocity.x < -400) step(1)
+                else if (info.offset.x > 60 || info.velocity.x > 400) step(-1)
+              }}
             >
-              <img src={current.src} alt={current.alt} />
+              <img src={current.src} alt={current.alt} draggable={false} />
               <figcaption>
-                <span>{current.alt}</span>
+                <span>
+                  <b className="lightbox-count">
+                    {active! + 1} / {items.length}
+                  </b>
+                  {current.alt}
+                </span>
                 {current.permalink && (
                   <a href={current.permalink} target="_blank" rel="noopener noreferrer">
                     View on Instagram <ArrowUpRight size={13} />

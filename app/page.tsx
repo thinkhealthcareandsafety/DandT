@@ -15,6 +15,7 @@ import { ScrollProgress } from '@/components/site/scroll-progress'
 import { Services } from '@/components/site/services'
 import { Showcase } from '@/components/site/showcase'
 import { Themes } from '@/components/site/themes'
+import { WhatsAppFab } from '@/components/site/whatsapp-fab'
 import { getGalleryItems } from '@/lib/gallery'
 import { getReviews } from '@/lib/reviews'
 
@@ -56,6 +57,7 @@ export default async function Page() {
       </main>
 
       <Footer />
+      <WhatsAppFab />
     </>
   )
 }

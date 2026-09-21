@@ -60,12 +60,12 @@ export const metadata: Metadata = {
   },
 }
 
+// The site is light-only; tint the mobile browser bar to match the cream page.
 export const viewport: Viewport = {
-  colorScheme: 'light dark',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
-  ],
+  colorScheme: 'light',
+  themeColor: '#f7f4ef',
+  // Lets fixed UI (the WhatsApp button) sit clear of the iPhone home indicator via safe-area insets.
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({
@@ -83,6 +83,8 @@ export default function RootLayout({
               '@context': 'https://schema.org',
               '@type': 'LocalBusiness',
               name: 'Dreams & Themes',
+              url: siteUrl().href,
+              image: new URL('/og.jpg', siteUrl()).href,
               description:
                 'Birthday decorations, theme parties, soft play rentals and return gifts across Pune, Dehradun and Lucknow.',
               email: 'dreamsandthemespune@gmail.com',
