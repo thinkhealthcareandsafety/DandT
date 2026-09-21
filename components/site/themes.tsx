@@ -1,56 +1,81 @@
 'use client'
 
 import { ArrowUpRight } from 'lucide-react'
-import { BalloonCluster, CrownMotif, LeafMotif, MoonMotif, PampasMotif, ShellMotif, Sparkle } from './decor'
-import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
+import { AnimatePresence, motion, useMotionValue, useSpring } from 'motion/react'
+import Image, { type StaticImageData } from 'next/image'
+import { useRef, useState } from 'react'
+import barbieGlam from '@/public/themes/barbie-glam.jpg'
+import characterWorlds from '@/public/themes/character-worlds.jpg'
+import floralEntrances from '@/public/themes/floral-entrances.jpg'
+import inflatables from '@/public/themes/inflatables.jpg'
+import neonGlow from '@/public/themes/neon-glow.jpg'
+import pastelGold from '@/public/themes/pastel-gold.jpg'
+import softPlay from '@/public/themes/soft-play.jpg'
+import { Reveal, SplitHeading } from './reveal'
 
-const themes = [
+type Theme = { name: string; note: string; image: StaticImageData; alt: string }
+
+const themes: Theme[] = [
   {
-    name: 'Unicorn Pastel',
-    copy: 'Blush clouds, iridescent balloons and a little glitter.',
-    gradient: 'linear-gradient(150deg, #f7dbe8 0%, #e4cdf2 52%, #fbe9d6 100%)',
-    dots: ['#f2c3d9', '#d6bdee', '#f8dcc0'],
-    Motif: BalloonCluster,
+    name: 'Pastel & Gold',
+    note: 'Balloon tunnels and arches in blush, mint and gold',
+    image: pastelGold,
+    alt: 'A pastel and gold balloon arch leading to a Happy Birthday backdrop',
   },
   {
-    name: 'Jungle Safari',
-    copy: 'Palm leaves, animal friends and earthy green tones.',
-    gradient: 'linear-gradient(150deg, #d6e4c8 0%, #9db58f 55%, #e7d8b6 100%)',
-    dots: ['#bcd1a9', '#8ca87c', '#e3d2ae'],
-    Motif: LeafMotif,
+    name: 'Neon Glow',
+    note: 'Lit balloon pillars and neon signs for evening parties',
+    image: neonGlow,
+    alt: 'A hotel corridor lined with glowing balloon pillars',
   },
   {
-    name: 'Princess Rose',
-    copy: 'Soft drapes, rose garlands and a tiny gold throne.',
-    gradient: 'linear-gradient(150deg, #fadedc 0%, #e6b0b6 55%, #f7e7d6 100%)',
-    dots: ['#f4cbc8', '#dfa1a9', '#f3e2cd'],
-    Motif: CrownMotif,
+    name: 'Barbie Glam',
+    note: 'Hot pink tables, silhouettes and confetti',
+    image: barbieGlam,
+    alt: 'A pink Barbie-themed table with a silhouette centrepiece',
   },
   {
-    name: 'Space & Stars',
-    copy: 'Deep midnight blues, moons and constellations overhead.',
-    gradient: 'linear-gradient(150deg, #3c3a5e 0%, #6a5b96 55%, #c3b3d8 100%)',
-    dots: ['#4a4670', '#7568a3', '#c9bade'],
-    dark: true,
-    Motif: MoonMotif,
+    name: 'Character Worlds',
+    note: 'Life-size cut-outs of the characters they love',
+    image: characterWorlds,
+    alt: 'A balloon arch entrance flanked by cartoon character cut-outs',
   },
   {
-    name: 'Mermaid Cove',
-    copy: 'Seafoam, pearls and shimmering ocean ribbons.',
-    gradient: 'linear-gradient(150deg, #c6e7e3 0%, #8cc4c0 55%, #e6d8ca 100%)',
-    dots: ['#b3ded9', '#7bb6b1', '#e0d0c0'],
-    Motif: ShellMotif,
+    name: 'Soft Play Wonderland',
+    note: 'Ball pits, slides and padded play for the little ones',
+    image: softPlay,
+    alt: 'Children playing in a colourful ball pit',
   },
   {
-    name: 'Vintage Boho',
-    copy: 'Pampas, dried florals and warm terracotta linen.',
-    gradient: 'linear-gradient(150deg, #ecd9c7 0%, #c8a586 55%, #d9c4ad 100%)',
-    dots: ['#e5cdb6', '#bd9a7d', '#d2bba2'],
-    Motif: PampasMotif,
+    name: 'Floral Entrances',
+    note: 'Flower carts and blooms that greet guests at the door',
+    image: floralEntrances,
+    alt: 'A white flower cart with pink blossoms and balloons at a venue entrance',
+  },
+  {
+    name: 'Pastel Inflatables',
+    note: 'Bouncy castles and bubble houses in soft colours',
+    image: inflatables,
+    alt: 'A pastel bouncy castle set up indoors',
   },
 ]
 
 export function Themes() {
+  const listRef = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState<number | null>(null)
+
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  const springX = useSpring(x, { stiffness: 260, damping: 28, mass: 0.6 })
+  const springY = useSpring(y, { stiffness: 260, damping: 28, mass: 0.6 })
+
+  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = listRef.current?.getBoundingClientRect()
+    if (!rect) return
+    x.set(e.clientX - rect.left)
+    y.set(e.clientY - rect.top)
+  }
+
   return (
     <section className="themes section-pad" id="themes">
       <div className="themes-head">
@@ -66,37 +91,60 @@ export function Themes() {
         </div>
         <Reveal delay={0.15}>
           <p>
-            These are just starting points — every palette gets tailored to your child, your space and the little
-            things they love this year.
+            A few of the worlds we build most often. Every one gets tailored to your child, your space and whatever
+            they love this year.
           </p>
         </Reveal>
       </div>
 
-      <RevealGroup className="theme-grid" stagger={0.08}>
-        {themes.map((theme) => (
-          <RevealItem key={theme.name}>
-            <a className={`theme-card${theme.dark ? ' is-dark' : ''}`} href="#contact">
-              <span className="theme-art" style={{ background: theme.gradient }}>
-                <theme.Motif className="theme-balloons" />
-                <Sparkle className="theme-sparkle theme-sparkle-a" />
-                <Sparkle className="theme-sparkle theme-sparkle-b" />
-              </span>
-              <span className="theme-meta">
-                <span className="theme-row">
-                  <span className="theme-name">{theme.name}</span>
-                  <ArrowUpRight size={17} />
-                </span>
-                <span className="theme-copy">{theme.copy}</span>
-                <span className="theme-dots">
-                  {theme.dots.map((dot) => (
-                    <i key={dot} style={{ background: dot }} />
-                  ))}
-                </span>
-              </span>
-            </a>
-          </RevealItem>
+      <div
+        className="theme-list"
+        ref={listRef}
+        onMouseMove={handleMove}
+        onMouseLeave={() => setActive(null)}
+        data-has-active={active !== null || undefined}
+      >
+        {themes.map((theme, i) => (
+          <motion.a
+            key={theme.name}
+            href="#contact"
+            className={`theme-row${active === i ? ' is-active' : ''}`}
+            onMouseEnter={() => setActive(i)}
+            onFocus={() => setActive(i)}
+            onBlur={() => setActive(null)}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.8, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <span className="theme-index">{String(i + 1).padStart(2, '0')}</span>
+            <span className="theme-name">{theme.name}</span>
+            <span className="theme-note">{theme.note}</span>
+            <span className="theme-thumb">
+              <Image src={theme.image} alt={theme.alt} sizes="96px" placeholder="blur" />
+            </span>
+            <ArrowUpRight className="theme-arrow" size={20} strokeWidth={1.4} />
+          </motion.a>
         ))}
-      </RevealGroup>
+
+        {/* Follows the pointer on devices that can hover; hidden on touch, where the inline thumbs show instead. */}
+        <motion.div className="theme-preview" style={{ x: springX, y: springY }} aria-hidden="true">
+          <AnimatePresence>
+            {active !== null && (
+              <motion.div
+                key={active}
+                className="theme-preview-card"
+                initial={{ opacity: 0, scale: 0.86, rotate: -4 }}
+                animate={{ opacity: 1, scale: 1, rotate: active % 2 ? 3 : -3 }}
+                exit={{ opacity: 0, scale: 0.92 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <Image src={themes[active].image} alt="" sizes="300px" placeholder="blur" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
     </section>
   )
 }
