@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform } from 'motion/react'
 import Image from 'next/image'
 import { useRef } from 'react'
-import heroImage from '@/public/showcase.jpg'
+import heroImage from '@/public/dreams-hero.jpg'
 import { SplitHeading } from './reveal'
 
 export function Showcase() {
