@@ -4,7 +4,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { motion, useScroll, useTransform } from 'motion/react'
 import Image from 'next/image'
 import { useRef } from 'react'
-import heroImage from '@/public/dreams-hero.jpg'
+import heroImage from '@/public/hero.jpg'
 import { Sparkle } from './decor'
 import { Magnetic } from './magnetic'
 
@@ -140,7 +140,7 @@ export function Hero() {
             <motion.div className="image-parallax" style={{ y: imageY, scale: imageScale }}>
               <Image
                 src={heroImage}
-                alt="A styled birthday celebration with a balloon garland, florals and a dessert table"
+                alt="A pastel balloon tunnel leading to a Happy Birthday neon backdrop, styled by Dreams and Themes"
                 priority
                 sizes="(max-width: 1080px) 100vw, 46vw"
                 placeholder="blur"
