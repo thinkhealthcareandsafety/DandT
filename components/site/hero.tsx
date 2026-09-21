@@ -193,7 +193,7 @@ export function Hero() {
       </div>
 
       <motion.a
-        href="#story"
+        href="#process"
         className="scroll-cue"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

@@ -34,7 +34,7 @@ export function Process() {
       <ArcLine className="process-arc" />
       <div className="process section-pad">
       <div className="process-heading">
-        <Reveal className="section-kicker">07 &nbsp; How it works</Reveal>
+        <Reveal className="section-kicker">01 &nbsp; How it works</Reveal>
         <h2>
           <SplitHeading>Four easy steps.</SplitHeading>
           <br />

@@ -14,7 +14,6 @@ import { Reviews } from '@/components/site/reviews'
 import { ScrollProgress } from '@/components/site/scroll-progress'
 import { Services } from '@/components/site/services'
 import { Showcase } from '@/components/site/showcase'
-import { Story } from '@/components/site/story'
 import { Themes } from '@/components/site/themes'
 import { getGalleryItems } from '@/lib/gallery'
 import { getReviews } from '@/lib/reviews'
@@ -44,14 +43,13 @@ export default async function Page() {
       <main className="site-shell">
         <Hero />
         <Marquee items={ticker} />
-        <Story />
+        <Process />
         <Themes />
         <Services />
         <Gallery items={galleryItems} />
         <Showcase />
         <Reviews data={reviewData} />
         <Packages />
-        <Process />
         <Faq />
         <InstagramBand />
         <Contact />

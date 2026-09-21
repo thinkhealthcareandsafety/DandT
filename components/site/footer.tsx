@@ -13,7 +13,6 @@ const columns = [
   {
     title: 'Explore',
     links: [
-      { label: 'Our approach', href: '#story' },
       { label: 'Gallery', href: '#gallery' },
       { label: 'Reviews', href: '#reviews' },
       { label: 'Packages', href: '#packages' },

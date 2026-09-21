@@ -33,7 +33,7 @@ export function Faq() {
   return (
     <section className="faq section-pad" id="faq">
       <div className="faq-head">
-        <Reveal className="section-kicker">08 &nbsp; Good to know</Reveal>
+        <Reveal className="section-kicker">07 &nbsp; Good to know</Reveal>
         <h2>
           <SplitHeading>Questions,</SplitHeading>
           <br />

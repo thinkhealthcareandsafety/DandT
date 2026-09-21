@@ -29,7 +29,7 @@ export function Contact() {
   return (
     <section className="contact section-pad" id="contact">
       <div className="contact-copy">
-        <Reveal className="section-kicker">09 &nbsp; Let&apos;s make it memorable</Reveal>
+        <Reveal className="section-kicker">08 &nbsp; Let&apos;s make it memorable</Reveal>
         <h2>
           <SplitHeading>Have a dream</SplitHeading>
           <br />
