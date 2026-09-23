@@ -7,9 +7,10 @@ import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
 import { SelectField } from './select-field'
 
 const contacts = [
+  // Nikita is always listed first — she holds the largest stake in the business.
+  { name: 'Nikita', number: '8007000606' },
   { name: 'Pakhi', number: '9559507878' },
   { name: 'Neeta', number: '9623614682' },
-  { name: 'Nikita', number: '8007000606' },
 ]
 
 const occasions = ['Birthday', 'Theme party', 'Soft play rental', 'Corporate / school', 'Something else']
@@ -41,7 +42,7 @@ export function Contact() {
             bit of magic.
           </p>
           <p className="signoff">
-            <span>with love,</span> Pakhi, Neeta &amp; Nikita
+            <span>with love,</span> Nikita, Pakhi &amp; Neeta
           </p>
         </Reveal>
 
