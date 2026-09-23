@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, MapPin, Phone } from 'lucide-react'
 import { useState } from 'react'
+import { DateField, displayDate } from './date-field'
 import { Magnetic } from './magnetic'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
 import { SelectField } from './select-field'
@@ -23,7 +24,7 @@ export function Contact() {
   const [city, setCity] = useState('Pune')
 
   const message = `Hi Dreams & Themes! I'm ${name || '—'}. I'd like to plan a ${occasion.toLowerCase()} in ${city}${
-    date ? ` on ${date}` : ''
+    date ? ` on ${displayDate(date)}` : ''
   }. Could you share details?`
   const whatsapp = `https://wa.me/919559507878?text=${encodeURIComponent(message)}`
 
@@ -63,8 +64,7 @@ export function Contact() {
             <SelectField label="Occasion" value={occasion} onValueChange={setOccasion} items={occasions} />
           </RevealItem>
           <RevealItem className="field">
-            <label htmlFor="enq-date">Date</label>
-            <input id="enq-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            <DateField label="Date" value={date} onValueChange={setDate} />
           </RevealItem>
           <RevealItem className="field">
             <SelectField label="City" value={city} onValueChange={setCity} items={cities} />

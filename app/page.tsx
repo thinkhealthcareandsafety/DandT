@@ -23,7 +23,7 @@ const ticker = [
   'Birthday Decorations',
   'Soft Play Rentals',
   'Theme Parties',
-  'Bubble Shows',
+  'Bubble House',
   'Return Gifts',
   'DIY Activities',
   'Canvas Painting',

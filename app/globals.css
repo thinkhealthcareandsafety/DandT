@@ -1493,6 +1493,185 @@ blockquote em {
   }
 }
 
+/* -------------------------------- date field ------------------------------- */
+/* A branded calendar instead of the browser's native <input type="date"> pop-up, which is
+   OS-drawn and can't be restyled — same trigger/popup language as .select-trigger/.select-popup. */
+.date-trigger {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 9px 0;
+  font: 400 14px var(--sans);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.4s var(--ease);
+}
+
+.date-trigger[data-empty] {
+  color: color-mix(in srgb, var(--muted) 65%, transparent);
+}
+
+.date-trigger:hover,
+.date-trigger[data-popup-open] {
+  border-color: var(--plum);
+}
+
+.date-positioner {
+  z-index: 520;
+  outline: none;
+}
+
+.date-popup {
+  box-sizing: border-box;
+  width: 272px;
+  padding: 18px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 28px 54px -28px rgba(42, 37, 48, 0.45), 0 2px 6px -2px rgba(42, 37, 48, 0.12);
+  transform-origin: var(--transform-origin, top center);
+  transition: opacity 0.24s var(--ease), transform 0.24s var(--ease);
+  outline: none;
+}
+
+.date-popup[data-starting-style],
+.date-popup[data-ending-style],
+.date-popup[data-closed] {
+  opacity: 0;
+  transform: scale(0.96) translateY(-6px);
+  pointer-events: none;
+}
+
+.date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.date-nav span {
+  font: 400 15px var(--serif);
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.date-nav button {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--plum);
+  cursor: pointer;
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.date-nav button:hover {
+  background: color-mix(in srgb, var(--rose) 30%, transparent);
+  border-color: var(--plum);
+}
+
+.date-weekdays,
+.date-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.date-weekdays span {
+  display: grid;
+  place-items: center;
+  height: 24px;
+  font: 500 9.5px var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.date-grid {
+  row-gap: 2px;
+}
+
+.date-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  font: 400 12.5px var(--sans);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.date-cell:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--rose) 38%, transparent);
+}
+
+.date-cell[data-today] {
+  color: var(--plum);
+  font-weight: 500;
+}
+
+.date-cell[data-today]::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.date-cell[data-selected] {
+  background: var(--plum);
+  color: #fff;
+}
+
+.date-cell[data-past] {
+  color: color-mix(in srgb, var(--muted) 55%, transparent);
+  cursor: default;
+}
+
+.date-cell-badge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  color: var(--gold);
+}
+
+.date-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.date-note svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .date-popup {
+    transition: none;
+  }
+}
+
 .field input,
 .field select {
   appearance: none;
@@ -3420,9 +3599,14 @@ body::before {
 
   .field input,
   .field select,
-  .select-trigger {
+  .select-trigger,
+  .date-trigger {
     font-size: 16px;
     padding: 11px 0;
+  }
+
+  .date-popup {
+    width: min(272px, calc(100vw - 2 * var(--gutter) - 4px));
   }
 
   .field-full .magnetic {

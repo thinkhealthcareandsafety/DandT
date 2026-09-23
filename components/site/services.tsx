@@ -26,7 +26,7 @@ import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
 
 /**
  * `image` is a real event photo — only set where one honestly represents that exact service.
- * Where none exists yet (bubble show, return gifts, outstation), the card gets a tinted
+ * Where none exists yet (return gifts, outstation), the card gets a tinted
  * gradient instead of a stock or AI photo, so nothing here misrepresents actual work.
  * Ordered so those three fall on a diagonal of the 3-up grid rather than bunching in one row.
  */
@@ -52,8 +52,8 @@ const services: {
     tint: 'plum',
   },
   {
-    title: 'Bubble Show',
-    copy: 'A performer, a sky full of bubbles, and a room full of delight.',
+    title: 'Bubble House',
+    copy: 'A giant balloon-filled dome the little ones can bounce and play inside.',
     Icon: Droplets,
     image: bubbleHouse,
     tint: 'rose',
