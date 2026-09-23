@@ -12,18 +12,87 @@ import {
   Plane,
   Scissors,
 } from 'lucide-react'
+import Image, { type StaticImageData } from 'next/image'
+import beadAndNailBar from '@/public/gallery/bead-and-nail-bar.jpg'
+import ballPit from '@/public/gallery/ball-pit.jpg'
+import canvasPainting from '@/public/gallery/canvas-painting.jpg'
+import kpopArchEntrance from '@/public/gallery/kpop-arch-entrance.jpg'
+import tattooArtistCorner from '@/public/gallery/12-tattoo-artist-corner.jpg'
+import whiteArchEntrance from '@/public/gallery/white-arch-entrance.jpg'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
 
-const services = [
-  { title: 'Birthday Decorations', copy: 'Balloon installations, floral styling and photo-ready backdrops.', Icon: Cake },
-  { title: 'Theme Parties', copy: 'Fully art-directed worlds, built around what your child loves most.', Icon: PartyPopper },
-  { title: 'Soft Play Area', copy: 'Clean, cushioned play zones designed for your littlest guests.', Icon: Baby },
-  { title: 'Bubble Show', copy: 'A performer, a sky full of bubbles, and a room full of delight.', Icon: Droplets },
-  { title: 'Tattoo Artist', copy: 'Temporary art for tiny arms, on-site through the celebration.', Icon: Brush },
-  { title: 'Canvas Paintings', copy: 'Guided painting corners that double as take-home keepsakes.', Icon: Palette },
-  { title: 'DIY Activities', copy: 'Hands-on craft stations that keep every age happily busy.', Icon: Scissors },
-  { title: 'Return Gifts', copy: 'Curated and beautifully wrapped — never an afterthought.', Icon: Gift },
-  { title: 'Outstation Birthdays', copy: 'We travel, we build, you simply arrive and celebrate.', Icon: Plane },
+/**
+ * `image` is a real event photo — only set where one honestly represents that exact service.
+ * Where none exists yet (bubble show, return gifts, outstation), the card gets a tinted
+ * gradient instead of a stock or AI photo, so nothing here misrepresents actual work.
+ */
+const services: {
+  title: string
+  copy: string
+  Icon: typeof Cake
+  image?: StaticImageData
+  tint: 'rose' | 'gold' | 'plum'
+}[] = [
+  {
+    title: 'Birthday Decorations',
+    copy: 'Balloon installations, floral styling and photo-ready backdrops.',
+    Icon: Cake,
+    image: whiteArchEntrance,
+    tint: 'rose',
+  },
+  {
+    title: 'Theme Parties',
+    copy: 'Fully art-directed worlds, built around what your child loves most.',
+    Icon: PartyPopper,
+    image: kpopArchEntrance,
+    tint: 'plum',
+  },
+  {
+    title: 'Soft Play Area',
+    copy: 'Clean, cushioned play zones designed for your littlest guests.',
+    Icon: Baby,
+    image: ballPit,
+    tint: 'gold',
+  },
+  {
+    title: 'Bubble Show',
+    copy: 'A performer, a sky full of bubbles, and a room full of delight.',
+    Icon: Droplets,
+    tint: 'rose',
+  },
+  {
+    title: 'Tattoo Artist',
+    copy: 'Temporary art for tiny arms, on-site through the celebration.',
+    Icon: Brush,
+    image: tattooArtistCorner,
+    tint: 'gold',
+  },
+  {
+    title: 'Canvas Paintings',
+    copy: 'Guided painting corners that double as take-home keepsakes.',
+    Icon: Palette,
+    image: canvasPainting,
+    tint: 'plum',
+  },
+  {
+    title: 'DIY Activities',
+    copy: 'Hands-on craft stations that keep every age happily busy.',
+    Icon: Scissors,
+    image: beadAndNailBar,
+    tint: 'rose',
+  },
+  {
+    title: 'Return Gifts',
+    copy: 'Curated and beautifully wrapped — never an afterthought.',
+    Icon: Gift,
+    tint: 'gold',
+  },
+  {
+    title: 'Outstation Birthdays',
+    copy: 'We travel, we build, you simply arrive and celebrate.',
+    Icon: Plane,
+    tint: 'plum',
+  },
 ]
 
 export function Services() {
@@ -59,15 +128,34 @@ export function Services() {
           <RevealItem key={service.title}>
             <a className="service-card" href="#contact" onMouseMove={handleMove}>
               <span className="service-spotlight" aria-hidden="true" />
-              <span className="service-top">
-                <span className="service-icon">
-                  <service.Icon size={19} strokeWidth={1.3} />
-                </span>
+
+              <span className={`service-media${service.image ? '' : ' service-media-tint'}`} data-tint={service.tint}>
+                {service.image ? (
+                  <Image
+                    src={service.image}
+                    alt=""
+                    // Matches .service-media at each breakpoint: a 60px thumbnail on phones, a
+                    // full-width card at 2-up, then a third of the page's 1280px-capped container.
+                    sizes="(max-width: 760px) 60px, (max-width: 1080px) 50vw, (max-width: 1328px) 33vw, 400px"
+                    quality={72}
+                    placeholder="blur"
+                  />
+                ) : (
+                  <service.Icon className="service-media-icon" size={56} strokeWidth={1} aria-hidden="true" />
+                )}
                 <span className="service-number">{String(i + 1).padStart(2, '0')}</span>
-                <ArrowUpRight size={19} className="service-arrow" />
+                <span className="service-view">
+                  <ArrowUpRight size={16} strokeWidth={1.6} />
+                </span>
               </span>
+
               <span className="service-body">
-                <span className="service-title">{service.title}</span>
+                <span className="service-heading">
+                  <span className="service-icon">
+                    <service.Icon size={17} strokeWidth={1.3} />
+                  </span>
+                  <span className="service-title">{service.title}</span>
+                </span>
                 <span className="service-copy">{service.copy}</span>
               </span>
             </a>

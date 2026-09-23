@@ -5,9 +5,12 @@ import { AnimatePresence, motion, useMotionValue, useSpring } from 'motion/react
 import Image, { type StaticImageData } from 'next/image'
 import { useRef, useState } from 'react'
 import barbieGlam from '@/public/themes/barbie-glam.jpg'
-import characterWorlds from '@/public/themes/character-worlds.jpg'
+import fairyGarden from '@/public/themes/fairy-garden.jpg'
 import floralEntrances from '@/public/themes/floral-entrances.jpg'
+import football from '@/public/themes/football.jpg'
+import frozen from '@/public/themes/frozen.jpg'
 import inflatables from '@/public/themes/inflatables.jpg'
+import kpopStars from '@/public/themes/kpop-stars.jpg'
 import neonGlow from '@/public/themes/neon-glow.jpg'
 import pastelGold from '@/public/themes/pastel-gold.jpg'
 import softPlay from '@/public/themes/soft-play.jpg'
@@ -37,14 +40,26 @@ const themes: Theme[] = [
   {
     name: 'Character Worlds',
     note: 'Life-size cut-outs of the characters they love',
-    image: characterWorlds,
-    alt: 'A balloon arch entrance flanked by cartoon character cut-outs',
+    image: kpopStars,
+    alt: 'A balloon arch entrance flanked by life-size K-pop character cut-outs',
+  },
+  {
+    name: 'Frozen Wonderland',
+    note: 'Icy blues, snowflakes and a Frozen-favourite entrance',
+    image: frozen,
+    alt: 'A Frozen-themed stage with Elsa and Anna cut-outs and a white balloon arch',
+  },
+  {
+    name: 'Fairy Garden',
+    note: 'Blush and lilac blooms with a fairy of their own',
+    image: fairyGarden,
+    alt: 'A blush and lilac balloon arch with a fairy cut-out and floral accents',
   },
   {
     name: 'Soft Play Wonderland',
     note: 'Ball pits, slides and padded play for the little ones',
     image: softPlay,
-    alt: 'Children playing in a colourful ball pit',
+    alt: 'A garden soft play area with a slide, see-saw and colourful play fencing',
   },
   {
     name: 'Floral Entrances',
@@ -57,6 +72,12 @@ const themes: Theme[] = [
     note: 'Bouncy castles and bubble houses in soft colours',
     image: inflatables,
     alt: 'A pastel bouncy castle set up indoors',
+  },
+  {
+    name: 'Match Day',
+    note: 'Football goals and team colours for the sports-mad',
+    image: football,
+    alt: 'A football-themed balloon display with a giant football and goal props',
   },
 ]
 
@@ -121,7 +142,7 @@ export function Themes() {
             <span className="theme-name">{theme.name}</span>
             <span className="theme-note">{theme.note}</span>
             <span className="theme-thumb">
-              <Image src={theme.image} alt={theme.alt} sizes="96px" placeholder="blur" />
+              <Image src={theme.image} alt={theme.alt} sizes="84px" quality={68} placeholder="blur" />
             </span>
             <ArrowUpRight className="theme-arrow" size={20} strokeWidth={1.4} />
           </motion.a>
@@ -139,7 +160,14 @@ export function Themes() {
                 exit={{ opacity: 0, scale: 0.92 }}
                 transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               >
-                <Image src={themes[active].image} alt="" sizes="300px" placeholder="blur" />
+                <Image
+                  src={themes[active].image}
+                  alt=""
+                  // Matches .theme-preview-card: clamp(220px, 20vw, 290px).
+                  sizes="(max-width: 1450px) 20vw, 290px"
+                  quality={68}
+                  placeholder="blur"
+                />
               </motion.div>
             )}
           </AnimatePresence>
