@@ -141,9 +141,14 @@ export function Services() {
                   <Image
                     src={service.image}
                     alt=""
-                    // Matches .service-media at each breakpoint: a 60px thumbnail on phones, a
-                    // full-width card at 2-up, then a third of the page's 1280px-capped container.
-                    sizes="(max-width: 760px) 60px, (max-width: 1080px) 50vw, (max-width: 1328px) 33vw, 400px"
+                    // Matches .service-media at each breakpoint: on phones the first card is full
+                    // width and the rest are half; 2-up on tablets; then a third of the page's
+                    // 1280px-capped container.
+                    sizes={
+                      i === 0
+                        ? '(max-width: 1080px) 100vw, (max-width: 1328px) 33vw, 400px'
+                        : '(max-width: 1080px) 50vw, (max-width: 1328px) 33vw, 400px'
+                    }
                     quality={72}
                     placeholder="blur"
                   />

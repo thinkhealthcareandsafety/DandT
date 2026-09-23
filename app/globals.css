@@ -3366,57 +3366,75 @@ body::before {
     max-width: none;
   }
 
-  /* services: compact rows with a small photo thumbnail — nine full photo cards would run
-     ~2,400px of scrolling, which loses far more (thumb fatigue) than the thumbnail gains. */
+  /* services: a photo-led magazine grid. The first service runs full width as the feature;
+     the other eight pair up two to a row, so the grid always ends even. The icon circle is
+     dropped here — on a phone the photo already says what the service is. */
   .service-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .service-grid > div {
+    border: 0;
+  }
+
+  .service-grid > div:first-child {
+    grid-column: 1 / -1;
   }
 
   .service-card {
-    flex-direction: row;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 16px;
+    gap: 10px;
+    background: none;
   }
 
   .service-media {
-    flex-shrink: 0;
-    width: 60px;
-    aspect-ratio: 1 / 1;
-    border-radius: var(--radius);
+    aspect-ratio: 4 / 5;
+    border-radius: 10px;
+    box-shadow: 0 14px 28px -20px rgba(42, 37, 48, 0.55);
   }
 
-  .service-number,
+  .service-grid > div:first-child .service-media {
+    aspect-ratio: 16 / 10;
+  }
+
+  .service-number {
+    top: 8px;
+    left: 8px;
+    font-size: 9px;
+    padding: 3px 7px;
+  }
+
   .service-view {
     display: none;
   }
 
-  .service-media-icon {
-    right: auto;
-    bottom: auto;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    transform: scale(0.5);
-  }
-
-  .service-card:hover .service-media-icon {
-    transform: scale(0.5);
-  }
-
   .service-body {
     gap: 4px;
-    padding: 0;
+    padding: 0 2px;
     background: none !important;
   }
 
+  .service-icon {
+    display: none;
+  }
+
   .service-title {
-    font-size: 1.05rem;
+    font-size: 1.12rem;
+    line-height: 1.15;
+  }
+
+  .service-grid > div:first-child .service-title {
+    font-size: 1.45rem;
   }
 
   .service-copy {
     max-width: none;
     font-size: 12px;
+    line-height: 1.5;
+    color: var(--muted);
   }
 
   /* gallery */
