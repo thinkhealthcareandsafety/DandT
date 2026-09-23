@@ -15,7 +15,9 @@ export function Showcase() {
   return (
     <section className="showcase" ref={ref}>
       <motion.div className="showcase-media" style={{ y }}>
-        <Image src={heroImage} alt="" aria-hidden="true" sizes="100vw" />
+        {/* Below the fold, always shown through a CSS grayscale+contrast filter and a dark veil —
+            compression artifacts a viewer would never notice, so it can compress harder. */}
+        <Image src={heroImage} alt="" aria-hidden="true" sizes="100vw" quality={60} />
       </motion.div>
       <motion.div className="showcase-veil" style={{ opacity: overlay }} aria-hidden="true" />
       <div className="showcase-inner">

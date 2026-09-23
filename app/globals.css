@@ -49,6 +49,12 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Every in-page anchor (#services, #gallery, …) needs this, or its target's top edge — and on
+   phones, its first row of content — lands hidden behind the fixed header. */
+[id] {
+  scroll-margin-top: var(--top-h);
+}
+
 /* Even line lengths in headlines, and no single-word last lines in body copy. */
 h1,
 h2,
@@ -861,19 +867,16 @@ blockquote em {
 .service-card {
   position: relative;
   overflow: hidden;
-  min-height: 190px;
   height: 100%;
-  padding: 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 32px;
   transition: color 0.45s var(--ease);
 }
 
 .service-spotlight {
   position: absolute;
   inset: 0;
+  z-index: 2;
   background: radial-gradient(
     240px circle at var(--mx, 50%) var(--my, 50%),
     color-mix(in srgb, var(--plum) 16%, transparent),
@@ -888,35 +891,105 @@ blockquote em {
   opacity: 1;
 }
 
-.service-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* Photo (or, where none exists yet, a tinted gradient — never a stock/AI stand-in) atop each card. */
+.service-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--cream-deep);
 }
 
-.service-top svg {
-  transition: transform 0.5s var(--ease), color 0.4s var(--ease);
-  color: var(--plum);
+.service-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s var(--ease);
 }
 
-.service-card:hover .service-top svg {
-  transform: translate(4px, -4px);
+.service-card:hover .service-media img {
+  transform: scale(1.06);
+}
+
+.service-media-tint[data-tint='rose'] {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--rose) 62%, var(--cream-deep)), var(--cream-deep) 85%);
+}
+
+.service-media-tint[data-tint='gold'] {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--gold) 42%, var(--cream-deep)), var(--cream-deep) 85%);
+}
+
+.service-media-tint[data-tint='plum'] {
+  background: linear-gradient(135deg, var(--plum), var(--ink) 85%);
+}
+
+.service-media-icon {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  color: color-mix(in srgb, var(--plum) 46%, transparent);
+  transition: transform 0.6s var(--ease);
+}
+
+.service-media-tint[data-tint='plum'] .service-media-icon {
+  color: color-mix(in srgb, var(--rose) 70%, transparent);
+}
+
+.service-card:hover .service-media-icon {
+  transform: scale(1.08) rotate(-6deg);
 }
 
 .service-number {
-  font: 400 10px var(--mono);
-  letter-spacing: 0.12em;
-  color: var(--muted);
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  font: 400 9.5px var(--mono);
+  letter-spacing: 0.1em;
+  color: #f8f4f0;
+  background: rgba(42, 37, 48, 0.5);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+  padding: 4px 9px;
+}
+
+.service-view {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  color: #f8f4f0;
+  background: rgba(42, 37, 48, 0.5);
+  backdrop-filter: blur(6px);
+  border-radius: 50%;
+  transition: transform 0.5s var(--ease), background 0.4s var(--ease);
+}
+
+.service-card:hover .service-view {
+  transform: translate(3px, -3px);
+  background: var(--plum);
 }
 
 .service-body {
+  position: relative;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  padding: 22px 24px 26px;
+}
+
+.service-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .service-title {
-  font: 400 clamp(1.25rem, 2vw, 1.6rem) var(--serif);
+  font: 400 clamp(1.15rem, 1.7vw, 1.4rem) var(--serif);
   letter-spacing: -0.02em;
   line-height: 1.15;
 }
@@ -1834,28 +1907,60 @@ body::before {
 
 
 
+.gallery-filters > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: clamp(22px, 3vw, 32px);
+}
+
+.gallery-filters button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: 400 12.5px var(--sans);
+  cursor: pointer;
+  transition: background 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+
+.gallery-filters button small {
+  font: 400 10px var(--mono);
+  color: var(--muted);
+  transition: color 0.35s var(--ease);
+}
+
+.gallery-filters button:hover {
+  border-color: var(--plum);
+}
+
+.gallery-filters button[aria-pressed='true'] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #f8f4f0;
+}
+
+.gallery-filters button[aria-pressed='true'] small {
+  color: var(--rose);
+}
+
+/* A uniform grid: every page of nine ends on a full row, whatever the photo shapes. */
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: clamp(220px, 25vw, 340px);
-  grid-auto-flow: dense;
   gap: clamp(12px, 1.6vw, 20px);
-}
-
-/* The lead photo spans two rows, so eleven images tile three columns (and two)
-   with no holes — the old masonry left a ragged gap at the bottom. */
-.gallery-cell:first-child {
-  grid-row: span 2;
-}
-
-.gallery-cell {
-  height: 100%;
 }
 
 .gallery-tile {
   position: relative;
   display: block;
   width: 100%;
+  aspect-ratio: 1 / 1;
   padding: 0;
   border: 0;
   background: var(--cream-deep);
@@ -1863,7 +1968,48 @@ body::before {
   overflow: hidden;
   cursor: pointer;
   line-height: 0;
+}
+
+.gallery-tile video {
+  width: 100%;
   height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.gallery-film {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(42, 37, 48, 0.62);
+  backdrop-filter: blur(6px);
+  color: #f8f4f0;
+  font: 400 9.5px/1 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.gallery-more {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(26px, 3.4vw, 40px);
+}
+
+.button-outline {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+.button-outline:hover {
+  color: #f8f4f0;
 }
 
 .gallery-tile img {
@@ -1925,6 +2071,15 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.lightbox figure video {
+  max-width: 100%;
+  max-height: 76vh;
+  border-radius: var(--radius);
+  display: block;
+  margin: auto;
+  background: #000;
 }
 
 .lightbox figure img {
@@ -2485,21 +2640,19 @@ body::before {
 }
 
 /* ---------------------------- service additions ---------------------------- */
-.service-card {
+.service-body {
   background: rgba(255, 255, 255, 0.4);
+  transition: background 0.45s var(--ease);
 }
 
-.service-card:hover {
+.service-card:hover .service-body {
   background: rgba(255, 255, 255, 0.82);
 }
 
-.service-top {
-  gap: 12px;
-}
-
 .service-icon {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -2512,10 +2665,6 @@ body::before {
   background: var(--plum);
   color: #fff;
   transform: rotate(-8deg);
-}
-
-.service-number {
-  margin-right: auto;
 }
 
 /* ------------------------------- responsive -------------------------------- */
@@ -2581,7 +2730,19 @@ body::before {
 
   .gallery-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: clamp(200px, 40vw, 380px);
+  }
+
+  .gallery-tile {
+    aspect-ratio: 4 / 5;
+  }
+
+  /* With two columns the lead tile runs full width, so nine tiles still end on a full row. */
+  .gallery-cell:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .gallery-cell:first-child .gallery-tile {
+    aspect-ratio: 4 / 3;
   }
 
   .tier-grid {
@@ -2787,59 +2948,98 @@ body::before {
     max-width: none;
   }
 
-  /* services: compact rows — nine tall cards were ~1,700px of scrolling */
+  /* services: compact rows with a small photo thumbnail — nine full photo cards would run
+     ~2,400px of scrolling, which loses far more (thumb fatigue) than the thumbnail gains. */
   .service-grid {
     grid-template-columns: 1fr;
   }
 
   .service-card {
-    min-height: 0;
     flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 16px;
-    padding: 18px 44px 18px 18px;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
   }
 
-  .service-top {
-    display: contents;
+  .service-media {
+    flex-shrink: 0;
+    width: 60px;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius);
   }
 
-  .service-number {
+  .service-number,
+  .service-view {
     display: none;
   }
 
-  .service-icon {
-    flex-shrink: 0;
+  .service-media-icon {
+    right: auto;
+    bottom: auto;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    transform: scale(0.5);
   }
 
-  .service-arrow {
-    position: absolute;
-    top: 20px;
-    right: 18px;
+  .service-card:hover .service-media-icon {
+    transform: scale(0.5);
   }
 
   .service-body {
-    gap: 5px;
+    gap: 4px;
+    padding: 0;
+    background: none !important;
   }
 
   .service-title {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
   }
 
   .service-copy {
     max-width: none;
+    font-size: 12px;
   }
 
   /* gallery */
   .gallery-grid {
-    grid-auto-rows: 58vw;
     gap: 10px;
+  }
+
+  .gallery-cell:first-child .gallery-tile {
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Chips scroll sideways rather than wrapping onto a second line. */
+  .gallery-filters > div {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .gallery-filters > div::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-filters button {
+    flex-shrink: 0;
+    height: 42px;
+  }
+
+  .gallery-more .button {
+    width: 100%;
   }
 
   .gallery-veil {
     opacity: 1;
-    padding: 14px;
+    padding: 12px;
+  }
+
+  .gallery-film {
+    top: 10px;
+    left: 10px;
   }
 
   .gallery-veil span {
@@ -2850,7 +3050,8 @@ body::before {
     padding: 70px 12px 110px;
   }
 
-  .lightbox figure img {
+  .lightbox figure img,
+  .lightbox figure video {
     max-height: 68svh;
   }
 
@@ -3112,7 +3313,7 @@ body::before {
     transform: scale(0.985);
   }
 
-  .service-card:active {
+  .service-card:active .service-body {
     background: rgba(255, 255, 255, 0.9);
   }
 

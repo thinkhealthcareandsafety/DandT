@@ -1,43 +1,48 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { imageSize } from 'image-size'
+import { GALLERY, type GalleryCategory } from '@/content/gallery'
 
 export type GalleryItem = {
   src: string
   alt: string
+  /** Short tile label; falls back to `alt` (e.g. for Instagram captions). */
+  title?: string
   permalink?: string
+  /** Local items only; Instagram media carries no category, which hides the filters. */
+  category?: GalleryCategory
+  /** A muted looping clip; `src` is then its poster frame. */
+  video?: string
   /** Present for local files only. Lets next/image reserve space and avoid layout shift. */
   width?: number
   height?: number
 }
 
-const IMAGE_EXT = /\.(jpe?g|png|webp|avif)$/i
-
-function labelFromFilename(file: string) {
-  const base = file.replace(IMAGE_EXT, '').replace(/^\d+[-_]/, '').replace(/[-_]+/g, ' ').trim()
-  return base ? base.charAt(0).toUpperCase() + base.slice(1) : 'Dreams & Themes celebration'
-}
-
 function readLocalGallery(): GalleryItem[] {
   const dir = path.join(process.cwd(), 'public', 'gallery')
-  if (!fs.existsSync(dir)) return []
-  return fs
-    .readdirSync(dir)
-    .filter((file) => IMAGE_EXT.test(file))
-    .sort()
-    .map((file) => {
-      const item: GalleryItem = { src: `/gallery/${file}`, alt: labelFromFilename(file) }
-      try {
-        const { width, height } = imageSize(fs.readFileSync(path.join(dir, file)))
-        if (width && height) {
-          item.width = width
-          item.height = height
-        }
-      } catch {
-        // Unreadable header: fall back to an unsized <img> rather than dropping the image.
+  return GALLERY.filter((entry) => {
+    const exists = fs.existsSync(path.join(dir, entry.file))
+    if (!exists) console.warn(`[gallery] Missing file public/gallery/${entry.file}; skipping it.`)
+    return exists
+  }).map((entry) => {
+    const item: GalleryItem = {
+      src: `/gallery/${entry.file}`,
+      alt: entry.alt,
+      title: entry.title,
+      category: entry.category,
+      video: entry.video && `/gallery/${entry.video}`,
+    }
+    try {
+      const { width, height } = imageSize(fs.readFileSync(path.join(dir, entry.file)))
+      if (width && height) {
+        item.width = width
+        item.height = height
       }
-      return item
-    })
+    } catch {
+      // Unreadable header: fall back to an unsized <img> rather than dropping the image.
+    }
+    return item
+  })
 }
 
 type InstagramMedia = {
