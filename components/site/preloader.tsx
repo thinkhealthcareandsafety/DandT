@@ -26,7 +26,7 @@ export function Preloader() {
       } catch {
         /* storage unavailable */
       }
-    }, 1350)
+    }, 1500)
 
     return () => {
       clearTimeout(timer)
@@ -42,21 +42,25 @@ export function Preloader() {
           exit={{ y: '-100%' }}
           transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
         >
+          {/* The name "written" left to right, like a signature on a card. */}
           <motion.span
-            className="brand-mark"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
+            className="preloader-script"
+            initial={{ clipPath: 'inset(0 100% 0 0)' }}
+            animate={{ clipPath: 'inset(0 0% 0 0)' }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.05, ease: [0.45, 0, 0.25, 1] }}
           >
-            D<span>&amp;</span>T
+            Dreams &amp; Themes
           </motion.span>
           <motion.span
-            className="preloader-line"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          />
+            className="preloader-sub"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Celebrations, made by hand
+          </motion.span>
         </motion.div>
       )}
     </AnimatePresence>

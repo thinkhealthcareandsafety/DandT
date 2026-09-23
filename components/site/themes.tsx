@@ -17,7 +17,15 @@ import softPlay from '@/public/themes/soft-play.jpg'
 import { Reveal, SplitHeading } from './reveal'
 
 /** `position` is the photo's object-position, for shots whose subject sits off-centre. */
-type Theme = { name: string; note: string; image: StaticImageData; alt: string; position?: string }
+type Theme = {
+  name: string
+  note: string
+  image: StaticImageData
+  alt: string
+  position?: string
+  /** The theme's colour story, read by eye from the balloons and fabrics in its photo. */
+  palette: string[]
+}
 
 const themes: Theme[] = [
   {
@@ -25,24 +33,28 @@ const themes: Theme[] = [
     note: 'Balloon tunnels and arches in blush, mint and gold',
     image: pastelGold,
     alt: 'A pastel and gold balloon arch leading to a Happy Birthday backdrop',
+    palette: ['#f4c2c0', '#e98b86', '#9fd3d6', '#f3e19a', '#c9a45c'],
   },
   {
     name: 'Neon Glow',
     note: 'Lit balloon pillars and neon signs for evening parties',
     image: neonGlow,
     alt: 'A hotel corridor lined with glowing balloon pillars',
+    palette: ['#e96bc4', '#8f86dc', '#e8aa90', '#f6f0ec', '#e2bd78'],
   },
   {
     name: 'Barbie Glam',
     note: 'Hot pink tables, silhouettes and confetti',
     image: barbieGlam,
     alt: 'A pink Barbie-themed table with a silhouette centrepiece',
+    palette: ['#d6246e', '#e48fb0', '#b8e0e6', '#f5f2ef', '#8e3fa0'],
   },
   {
     name: 'Character Worlds',
     note: 'Life-size cut-outs of the characters they love',
     image: kpopStars,
     alt: 'A balloon arch entrance flanked by life-size K-pop character cut-outs',
+    palette: ['#d9b62c', '#e86fa0', '#9b7fd6', '#c7b9ec', '#f0dbe9'],
   },
   {
     name: 'Frozen Wonderland',
@@ -50,36 +62,42 @@ const themes: Theme[] = [
     image: lightRingArch,
     alt: 'A glowing ring-light arch flanked by Olaf, Elsa and Anna cut-outs in a marble hotel foyer',
     position: '50% 62%',
+    palette: ['#e1dfd8', '#b4cce8', '#8aa2cc', '#54688f', '#2d3a59'],
   },
   {
     name: 'Fairy Garden',
     note: 'Blush and lilac blooms with a fairy of their own',
     image: fairyGarden,
     alt: 'A blush and lilac balloon arch with a fairy cut-out and floral accents',
+    palette: ['#d8c7ec', '#7b5aa6', '#f1c9d4', '#e2f1a3', '#ad7eb3'],
   },
   {
     name: 'Soft Play Wonderland',
     note: 'Ball pits, slides and padded play for the little ones',
     image: softPlay,
     alt: 'A garden soft play area with a slide, see-saw and colourful play fencing',
+    palette: ['#b2e1eb', '#a6cd79', '#e2bb24', '#658f45', '#d52a3c'],
   },
   {
     name: 'Floral Entrances',
     note: 'Flower carts and blooms that greet guests at the door',
     image: floralEntrances,
     alt: 'A white flower cart with pink blossoms and balloons at a venue entrance',
+    palette: ['#e8a0b4', '#b99ac2', '#f4eee6', '#9fb58a', '#c4a36a'],
   },
   {
     name: 'Pastel Inflatables',
     note: 'Bouncy castles and bubble houses in soft colours',
     image: inflatables,
     alt: 'A pastel bouncy castle set up indoors',
+    palette: ['#e9cfe6', '#f4e7a8', '#b9d6ec', '#f5c6cf', '#f6f3ee'],
   },
   {
     name: 'Match Day',
     note: 'Football goals and team colours for the sports-mad',
     image: football,
     alt: 'A football-themed balloon display with a giant football and goal props',
+    palette: ['#f3f2ee', '#9dbc64', '#13956d', '#336819', '#26282a'],
   },
 ]
 
@@ -159,6 +177,12 @@ export function Themes() {
               <span className="theme-text">
                 <span className="theme-name">{theme.name}</span>
                 <span className="theme-note">{theme.note}</span>
+                {/* Phones only — on wide screens the palette sits under the big photo instead. */}
+                <span className="theme-swatches theme-swatches-inline" aria-hidden="true">
+                  {theme.palette.map((c) => (
+                    <i key={c} style={{ background: c }} />
+                  ))}
+                </span>
               </span>
               <span className="theme-thumb">
                 <Image
@@ -198,6 +222,20 @@ export function Themes() {
               {String(active + 1).padStart(2, '0')} <i>/ {String(themes.length).padStart(2, '0')}</i>
             </span>
             <strong key={current.name}>{current.name}</strong>
+          </div>
+          <div className="theme-palette">
+            <em>the palette</em>
+            <span className="theme-swatches">
+              {current.palette.map((c, i) => (
+                <motion.i
+                  key={`${current.name}-${c}`}
+                  style={{ background: c }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: 'spring', stiffness: 320, damping: 18, delay: i * 0.05 }}
+                />
+              ))}
+            </span>
           </div>
         </div>
       </div>

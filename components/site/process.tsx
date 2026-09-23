@@ -8,7 +8,7 @@ import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
 const steps = [
   {
     title: 'Tell us the dream',
-    copy: 'A call, a mood, a favourite character — anything is enough to begin.',
+    copy: 'A message, a screenshot, “she’s obsessed with Frozen” — anything is enough to begin.',
   },
   {
     title: 'We design it',
@@ -36,10 +36,10 @@ export function Process() {
       <div className="process-heading">
         <Reveal className="section-kicker">How it works</Reveal>
         <h2>
-          <SplitHeading>Four easy steps.</SplitHeading>
+          <SplitHeading>From one WhatsApp message</SplitHeading>
           <br />
           <em>
-            <SplitHeading delay={0.1}>Zero stress.</SplitHeading>
+            <SplitHeading delay={0.1}>to the last balloon.</SplitHeading>
           </em>
         </h2>
       </div>
