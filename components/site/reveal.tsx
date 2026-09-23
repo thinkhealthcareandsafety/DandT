@@ -5,6 +5,13 @@ import type { ReactNode } from 'react'
 
 const easeOut = [0.16, 1, 0.3, 1] as const
 
+// Module-level so every render passes the same object. An inline {{ once, amount }} is a new object
+// each render, which re-creates the in-view observer and can drop a revealed block back to hidden —
+// e.g. a tall grid that grows past the point where its amount threshold can ever be met.
+const VIEWPORT_BLOCK = { once: true, amount: 0.3 } as const
+const VIEWPORT_GROUP = { once: true, amount: 0.25 } as const
+const VIEWPORT_HEADING = { once: true, amount: 0.6 } as const
+
 export function Reveal({
   children,
   delay = 0,
@@ -32,7 +39,7 @@ export function Reveal({
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={VIEWPORT_BLOCK}
       variants={variants}
     >
       {children}
@@ -56,7 +63,7 @@ export function RevealGroup({
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.25 }}
+      viewport={VIEWPORT_GROUP}
       variants={{
         hidden: {},
         show: { transition: { staggerChildren: stagger, delayChildren: delay } },
@@ -105,7 +112,7 @@ export function SplitHeading({
       style={{ display: 'inline-block' }}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, amount: 0.6 }}
+      viewport={VIEWPORT_HEADING}
       variants={{ hidden: {}, show: { transition: { staggerChildren: 0.055, delayChildren: delay } } }}
     >
       {words.map((word, i) => (

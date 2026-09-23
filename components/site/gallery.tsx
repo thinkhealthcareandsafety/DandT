@@ -6,10 +6,13 @@ import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { GALLERY_CATEGORIES, type GalleryCategory } from '@/content/gallery'
 import type { GalleryItem } from '@/lib/gallery'
-import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
+import { Reveal, SplitHeading } from './reveal'
 
 // Three full rows on desktop; on phones the first tile runs full width, so nine still ends evenly.
 const INITIAL = 9
+
+// Stable object (see reveal.tsx); a small amount so a tile shows as soon as its top edge arrives.
+const TILE_VIEWPORT = { once: true, amount: 0.15 } as const
 
 /** Plays only while on screen, so off-screen clips cost no data or battery. */
 function VideoTile({ item }: { item: GalleryItem }) {
@@ -117,15 +120,20 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
         </Reveal>
       )}
 
-      {/* Keyed by filter so a new selection replays the staggered entrance. */}
-      {/* The lead photo doubles up (2×2) on desktop — but only when the count keeps every row full. */}
-      <RevealGroup
-        className={`gallery-grid${visible.length % 3 === 0 ? ' has-feature' : ''}`}
-        stagger={0.05}
-        key={filter}
-      >
+      {/* Keyed by filter so a new selection replays the entrance. The lead photo doubles up (2×2)
+          on desktop — but only when the count keeps every row full. */}
+      <div className={`gallery-grid${visible.length % 3 === 0 ? ' has-feature' : ''}`} key={filter}>
         {visible.map((item, i) => (
-          <RevealItem className="gallery-cell" key={item.src} y={18}>
+          // Each tile reveals itself as it scrolls in. A group-level reveal broke "Show all": the
+          // grown grid is too tall for its visibility threshold ever to be met, so it stayed blank.
+          <motion.div
+            className="gallery-cell"
+            key={item.src}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={TILE_VIEWPORT}
+            transition={{ duration: 0.8, delay: (i % 3) * 0.06, ease: [0.16, 1, 0.3, 1] }}
+          >
             <button
               className="gallery-tile"
               onClick={() => setActive(i)}
@@ -157,9 +165,9 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
                 <span>{item.title ?? item.alt}</span>
               </span>
             </button>
-          </RevealItem>
+          </motion.div>
         ))}
-      </RevealGroup>
+      </div>
 
       {filtered.length > visible.length && (
         <div className="gallery-more">
