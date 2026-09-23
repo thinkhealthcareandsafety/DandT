@@ -219,7 +219,7 @@ export function Hero() {
           <span>Transparent, itemised quotes</span>
         </li>
         <li>
-          <strong>Same-team delivery</strong>
+          <strong>One team, start to finish</strong>
           <span>We design, build and clean up</span>
         </li>
         <li>
