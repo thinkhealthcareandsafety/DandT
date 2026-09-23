@@ -1,22 +1,23 @@
 'use client'
 
 import { ArrowUpRight } from 'lucide-react'
-import { AnimatePresence, motion, useMotionValue, useSpring } from 'motion/react'
+import { motion } from 'motion/react'
 import Image, { type StaticImageData } from 'next/image'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import barbieGlam from '@/public/themes/barbie-glam.jpg'
 import fairyGarden from '@/public/themes/fairy-garden.jpg'
 import floralEntrances from '@/public/themes/floral-entrances.jpg'
 import football from '@/public/themes/football.jpg'
-import frozen from '@/public/themes/frozen.jpg'
 import inflatables from '@/public/themes/inflatables.jpg'
 import kpopStars from '@/public/themes/kpop-stars.jpg'
+import lightRingArch from '@/public/gallery/light-ring-arch.jpg'
 import neonGlow from '@/public/themes/neon-glow.jpg'
 import pastelGold from '@/public/themes/pastel-gold.jpg'
 import softPlay from '@/public/themes/soft-play.jpg'
 import { Reveal, SplitHeading } from './reveal'
 
-type Theme = { name: string; note: string; image: StaticImageData; alt: string }
+/** `position` is the photo's object-position, for shots whose subject sits off-centre. */
+type Theme = { name: string; note: string; image: StaticImageData; alt: string; position?: string }
 
 const themes: Theme[] = [
   {
@@ -46,8 +47,9 @@ const themes: Theme[] = [
   {
     name: 'Frozen Wonderland',
     note: 'Icy blues, snowflakes and a Frozen-favourite entrance',
-    image: frozen,
-    alt: 'A Frozen-themed stage with Elsa and Anna cut-outs and a white balloon arch',
+    image: lightRingArch,
+    alt: 'A glowing ring-light arch flanked by Olaf, Elsa and Anna cut-outs in a marble hotel foyer',
+    position: '50% 62%',
   },
   {
     name: 'Fairy Garden',
@@ -82,20 +84,27 @@ const themes: Theme[] = [
 ]
 
 export function Themes() {
-  const listRef = useRef<HTMLDivElement>(null)
-  const [active, setActive] = useState<number | null>(null)
+  const [active, setActive] = useState(0)
+  const rowRefs = useRef<(HTMLAnchorElement | null)[]>([])
+  // While the pointer is over the list it picks the photo; scrolling picks it otherwise.
+  const pointerInside = useRef(false)
 
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-  const springX = useSpring(x, { stiffness: 260, damping: 28, mass: 0.6 })
-  const springY = useSpring(y, { stiffness: 260, damping: 28, mass: 0.6 })
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (pointerInside.current) return
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActive(Number((entry.target as HTMLElement).dataset.index))
+        }
+      },
+      // A thin band across the middle of the viewport: the row crossing it is the active one.
+      { rootMargin: '-46% 0px -52% 0px' },
+    )
+    for (const row of rowRefs.current) if (row) observer.observe(row)
+    return () => observer.disconnect()
+  }, [])
 
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = listRef.current?.getBoundingClientRect()
-    if (!rect) return
-    x.set(e.clientX - rect.left)
-    y.set(e.clientY - rect.top)
-  }
+  const current = themes[active]
 
   return (
     <section className="themes section-pad" id="themes">
@@ -118,60 +127,79 @@ export function Themes() {
         </Reveal>
       </div>
 
-      <div
-        className="theme-list"
-        ref={listRef}
-        onMouseMove={handleMove}
-        onMouseLeave={() => setActive(null)}
-        data-has-active={active !== null || undefined}
-      >
-        {themes.map((theme, i) => (
-          <motion.a
-            key={theme.name}
-            href="#contact"
-            className={`theme-row${active === i ? ' is-active' : ''}`}
-            onMouseEnter={() => setActive(i)}
-            onFocus={() => setActive(i)}
-            onBlur={() => setActive(null)}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.8, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="theme-index">{String(i + 1).padStart(2, '0')}</span>
-            <span className="theme-name">{theme.name}</span>
-            <span className="theme-note">{theme.note}</span>
-            <span className="theme-thumb">
-              <Image src={theme.image} alt={theme.alt} sizes="84px" quality={68} placeholder="blur" />
-            </span>
-            <ArrowUpRight className="theme-arrow" size={20} strokeWidth={1.4} />
-          </motion.a>
-        ))}
-
-        {/* Follows the pointer on devices that can hover; hidden on touch, where the inline thumbs show instead. */}
-        <motion.div className="theme-preview" style={{ x: springX, y: springY }} aria-hidden="true">
-          <AnimatePresence>
-            {active !== null && (
-              <motion.div
-                key={active}
-                className="theme-preview-card"
-                initial={{ opacity: 0, scale: 0.86, rotate: -4 }}
-                animate={{ opacity: 1, scale: 1, rotate: active % 2 ? 3 : -3 }}
-                exit={{ opacity: 0, scale: 0.92 }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              >
+      <div className="theme-layout">
+        <div
+          className="theme-list"
+          onPointerEnter={(e) => {
+            if (e.pointerType === 'mouse') pointerInside.current = true
+          }}
+          onPointerLeave={() => {
+            pointerInside.current = false
+          }}
+        >
+          {themes.map((theme, i) => (
+            <motion.a
+              key={theme.name}
+              ref={(el) => {
+                rowRefs.current[i] = el
+              }}
+              data-index={i}
+              href="#contact"
+              className={`theme-row${active === i ? ' is-active' : ''}`}
+              onPointerEnter={(e) => {
+                if (e.pointerType === 'mouse') setActive(i)
+              }}
+              onFocus={() => setActive(i)}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.8, delay: (i % 4) * 0.05, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="theme-index">{String(i + 1).padStart(2, '0')}</span>
+              <span className="theme-text">
+                <span className="theme-name">{theme.name}</span>
+                <span className="theme-note">{theme.note}</span>
+              </span>
+              <span className="theme-thumb">
                 <Image
-                  src={themes[active].image}
-                  alt=""
-                  // Matches .theme-preview-card: clamp(220px, 20vw, 290px).
-                  sizes="(max-width: 1450px) 20vw, 290px"
+                  src={theme.image}
+                  alt={theme.alt}
+                  sizes="84px"
                   quality={68}
                   placeholder="blur"
+                  style={{ objectPosition: theme.position }}
                 />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+              </span>
+              <ArrowUpRight className="theme-arrow" size={20} strokeWidth={1.4} />
+            </motion.a>
+          ))}
+        </div>
+
+        {/* Wide screens only: a sticky photo that follows the active row. Hidden (and so never
+            fetched, since the images lazy-load) where the rows carry their own thumbnails. */}
+        <div className="theme-stage" aria-hidden="true">
+          <div className="theme-stage-frame">
+            {themes.map((theme, i) => (
+              <Image
+                key={theme.name}
+                src={theme.image}
+                alt=""
+                fill
+                sizes="(max-width: 1328px) 36vw, 470px"
+                quality={72}
+                placeholder="blur"
+                className={i === active ? 'is-active' : undefined}
+                style={{ objectPosition: theme.position }}
+              />
+            ))}
+          </div>
+          <div className="theme-stage-caption">
+            <span>
+              {String(active + 1).padStart(2, '0')} <i>/ {String(themes.length).padStart(2, '0')}</i>
+            </span>
+            <strong key={current.name}>{current.name}</strong>
+          </div>
+        </div>
       </div>
     </section>
   )

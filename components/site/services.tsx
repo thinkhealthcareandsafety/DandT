@@ -15,8 +15,11 @@ import {
 import Image, { type StaticImageData } from 'next/image'
 import beadAndNailBar from '@/public/gallery/bead-and-nail-bar.jpg'
 import ballPit from '@/public/gallery/ball-pit.jpg'
+import bubbleHouse from '@/public/gallery/10-bubble-house-balloons.jpg'
+import butterflyCentrepiece from '@/public/gallery/butterfly-centrepiece.jpg'
 import canvasPainting from '@/public/gallery/canvas-painting.jpg'
 import kpopArchEntrance from '@/public/gallery/kpop-arch-entrance.jpg'
+import neonGlow from '@/public/themes/neon-glow.jpg'
 import tattooArtistCorner from '@/public/gallery/12-tattoo-artist-corner.jpg'
 import whiteArchEntrance from '@/public/gallery/white-arch-entrance.jpg'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
@@ -25,6 +28,7 @@ import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
  * `image` is a real event photo — only set where one honestly represents that exact service.
  * Where none exists yet (bubble show, return gifts, outstation), the card gets a tinted
  * gradient instead of a stock or AI photo, so nothing here misrepresents actual work.
+ * Ordered so those three fall on a diagonal of the 3-up grid rather than bunching in one row.
  */
 const services: {
   title: string
@@ -48,6 +52,13 @@ const services: {
     tint: 'plum',
   },
   {
+    title: 'Bubble Show',
+    copy: 'A performer, a sky full of bubbles, and a room full of delight.',
+    Icon: Droplets,
+    image: bubbleHouse,
+    tint: 'rose',
+  },
+  {
     title: 'Soft Play Area',
     copy: 'Clean, cushioned play zones designed for your littlest guests.',
     Icon: Baby,
@@ -55,10 +66,11 @@ const services: {
     tint: 'gold',
   },
   {
-    title: 'Bubble Show',
-    copy: 'A performer, a sky full of bubbles, and a room full of delight.',
-    Icon: Droplets,
-    tint: 'rose',
+    title: 'Return Gifts',
+    copy: 'Curated and beautifully wrapped — never an afterthought.',
+    Icon: Gift,
+    image: butterflyCentrepiece,
+    tint: 'gold',
   },
   {
     title: 'Tattoo Artist',
@@ -66,6 +78,13 @@ const services: {
     Icon: Brush,
     image: tattooArtistCorner,
     tint: 'gold',
+  },
+  {
+    title: 'Outstation Birthdays',
+    copy: 'We travel, we build, you simply arrive and celebrate.',
+    Icon: Plane,
+    image: neonGlow,
+    tint: 'plum',
   },
   {
     title: 'Canvas Paintings',
@@ -80,18 +99,6 @@ const services: {
     Icon: Scissors,
     image: beadAndNailBar,
     tint: 'rose',
-  },
-  {
-    title: 'Return Gifts',
-    copy: 'Curated and beautifully wrapped — never an afterthought.',
-    Icon: Gift,
-    tint: 'gold',
-  },
-  {
-    title: 'Outstation Birthdays',
-    copy: 'We travel, we build, you simply arrive and celebrate.',
-    Icon: Plane,
-    tint: 'plum',
   },
 ]
 

@@ -32,7 +32,7 @@
   --radius: 6px;
   --surface: rgba(255, 255, 255, 0.72);
   --shadow-lift: 0 30px 56px -32px rgba(42, 37, 48, 0.42);
-  --section-y: clamp(64px, 7vw, 96px);
+  --section-y: clamp(56px, 6vw, 84px);
   --head-gap: clamp(40px, 5vw, 60px);
 
   color-scheme: light;
@@ -65,6 +65,14 @@ blockquote {
 
 p {
   text-wrap: pretty;
+}
+
+/* Short, card-width copy reads better with even lines than with a stranded last word. */
+.section-head p,
+.service-copy,
+.tier-copy,
+.process-step p {
+  text-wrap: balance;
 }
 
 body {
@@ -678,6 +686,8 @@ blockquote em {
 
 .hero-stamp {
   position: absolute;
+  /* Above .image-frame (z-index 1), which otherwise hides half the rotating ring. */
+  z-index: 2;
   bottom: -30px;
   left: -14px;
   width: 124px;
@@ -1596,6 +1606,21 @@ blockquote em {
   color: var(--muted);
 }
 
+/* The address stays lowercase and in its own case so it reads as an email, not a label. */
+.footer-credit a {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1px;
+  transition: color 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+
+.footer-credit a:hover {
+  color: var(--plum);
+  border-color: var(--plum);
+}
+
 /* ------------------------------ whatsapp fab ------------------------------- */
 .wa-fab {
   position: fixed;
@@ -1738,12 +1763,18 @@ body::before {
 }
 
 /* ---------------------------------- themes --------------------------------- */
+/* An editorial index: the list on the left, one large photo on the right that follows the
+   row you're reading (by scroll, or by pointer when hovering). Phones get inline thumbnails. */
 .themes {
   position: relative;
 }
 
-
-
+.theme-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
 
 .theme-list {
   position: relative;
@@ -1753,128 +1784,174 @@ body::before {
 .theme-row {
   position: relative;
   display: grid;
-  grid-template-columns: 56px minmax(0, 1.1fr) minmax(0, 1fr) auto;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 28px;
-  padding: clamp(22px, 2.6vw, 32px) 0;
+  gap: 20px;
+  padding: clamp(16px, 1.8vw, 22px) 0;
   border-bottom: 1px solid var(--line);
-  transition: opacity 0.5s var(--ease);
-}
-
-/* Spotlight: while one row is hovered, the others step back. Applied to the children
-   because the scroll-in animation leaves an inline opacity on the row itself. */
-.theme-row > * {
-  transition: opacity 0.5s var(--ease), transform 0.6s var(--ease), color 0.5s var(--ease);
-}
-
-.theme-list[data-has-active] .theme-row:not(.is-active) > * {
-  opacity: 0.3;
 }
 
 .theme-index {
   font: 500 10px var(--mono);
   letter-spacing: 0.14em;
   color: var(--muted);
+  transition: color 0.5s var(--ease);
+}
+
+.theme-text {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
 }
 
 .theme-name {
-  font: 400 clamp(1.9rem, 4.2vw, 3.6rem) / 1 var(--serif);
-  letter-spacing: -0.03em;
+  font: 400 clamp(1.6rem, 2.6vw, 2.35rem) / 1.05 var(--serif);
+  letter-spacing: -0.028em;
   color: var(--ink);
-  transition: transform 0.6s var(--ease), color 0.5s var(--ease), opacity 0.5s var(--ease);
-}
-
-.theme-row.is-active .theme-name {
-  transform: translateX(14px);
-  color: var(--plum);
+  transition: transform 0.6s var(--ease), color 0.5s var(--ease);
 }
 
 .theme-note {
-  font-size: 13.5px;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.55;
   color: var(--muted);
-  max-width: 34ch;
+  max-width: 40ch;
+  text-wrap: balance;
 }
 
 .theme-arrow {
   color: var(--plum);
+  opacity: 0.35;
   transition: transform 0.5s var(--ease), opacity 0.5s var(--ease);
 }
 
-.theme-row.is-active .theme-arrow {
-  transform: translate(4px, -4px) rotate(45deg);
+.theme-row.is-active .theme-index {
+  color: var(--gold);
 }
 
-/* Inline thumbnails are the touch-device fallback for the cursor preview. */
+.theme-row.is-active .theme-name {
+  transform: translateX(10px);
+  color: var(--plum);
+  font-style: italic;
+}
+
+.theme-row.is-active .theme-arrow {
+  opacity: 1;
+  transform: translate(3px, -3px);
+}
+
 .theme-thumb {
   display: none;
 }
 
-.theme-preview {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  z-index: 5;
+.theme-stage {
+  position: sticky;
+  /* Clears the header when it slides back in on an upward scroll. */
+  top: 104px;
+  display: grid;
+  gap: 16px;
 }
 
-.theme-preview-card {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: clamp(220px, 20vw, 290px);
-  aspect-ratio: 3 / 4;
-  /* `translate` composes separately from the transform Motion animates (scale, rotate). */
-  translate: -50% -62%;
+.theme-stage-frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-height: calc(100svh - 190px);
+  width: 100%;
   border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 0 40px 70px -30px rgba(42, 37, 48, 0.55);
   background: var(--cream-deep);
+  box-shadow: var(--shadow-lift);
 }
 
-.theme-preview-card img {
-  width: 100%;
-  height: 100%;
+.theme-stage-frame img {
   object-fit: cover;
-  display: block;
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 0.7s var(--ease), transform 1.4s var(--ease);
 }
 
-@media (hover: none), (max-width: 760px) {
-  .theme-preview {
+.theme-stage-frame img.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.theme-stage-caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+
+.theme-stage-caption span {
+  font: 500 10px var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--plum);
+  font-variant-numeric: tabular-nums;
+}
+
+.theme-stage-caption i {
+  font-style: normal;
+  color: var(--muted);
+}
+
+.theme-stage-caption strong {
+  font: italic 400 1.15rem / 1.2 var(--serif);
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  animation: stage-caption 0.6s var(--ease);
+}
+
+@keyframes stage-caption {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (max-width: 899px) {
+  .theme-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .theme-stage {
     display: none;
-  }
-
-  .theme-list[data-has-active] .theme-row:not(.is-active) > * {
-    opacity: 1;
-  }
-
-  .theme-row.is-active .theme-name {
-    transform: none;
-    color: var(--ink);
   }
 
   .theme-row {
     grid-template-columns: minmax(0, 1fr) 84px;
     grid-template-areas:
       'index thumb'
-      'name thumb'
-      'note thumb';
+      'text thumb';
     gap: 6px 18px;
   }
 
   .theme-index {
     grid-area: index;
+    align-self: end;
+  }
+
+  .theme-text {
+    grid-area: text;
+    align-self: start;
   }
 
   .theme-name {
-    grid-area: name;
-    font-size: clamp(1.7rem, 7vw, 2.2rem);
+    font-size: clamp(1.6rem, 6.6vw, 2.1rem);
+  }
+
+  .theme-row.is-active .theme-name {
+    transform: none;
+    color: var(--ink);
+    font-style: normal;
+  }
+
+  .theme-row.is-active .theme-index {
+    color: var(--muted);
   }
 
   .theme-note {
-    grid-area: note;
     font-size: 12.5px;
   }
 
@@ -1896,6 +1973,18 @@ body::before {
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-stage-frame img,
+  .theme-name {
+    transition: opacity 0.2s linear;
+    transform: none !important;
+  }
+
+  .theme-stage-caption strong {
+    animation: none;
   }
 }
 
@@ -1954,6 +2043,25 @@ body::before {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(12px, 1.6vw, 20px);
+}
+
+@media (min-width: 1081px) {
+  .gallery-grid.has-feature .gallery-cell:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .gallery-grid.has-feature .gallery-cell:first-child .gallery-tile {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+
+  /* Out of flow, so the photo's own height can't stretch the two rows it spans — the square
+     tiles beside it set the row height, and the feature tile simply fills that. */
+  .gallery-grid.has-feature .gallery-cell:first-child .gallery-tile :is(img, video) {
+    position: absolute;
+    inset: 0;
+  }
 }
 
 .gallery-tile {

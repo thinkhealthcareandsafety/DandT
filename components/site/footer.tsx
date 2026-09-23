@@ -82,6 +82,9 @@ export function Footer() {
       <div className="footer-base">
         <span>© {new Date().getFullYear()} Dreams &amp; Themes · Pune</span>
         <span>Birthday decor · Soft play · Theme parties</span>
+        <span className="footer-credit">
+          Made by <a href="mailto:sagarkadam8081@gmail.com">sagarkadam8081@gmail.com</a>
+        </span>
       </div>
     </footer>
   )

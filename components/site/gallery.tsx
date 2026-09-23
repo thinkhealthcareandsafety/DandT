@@ -118,7 +118,12 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
       )}
 
       {/* Keyed by filter so a new selection replays the staggered entrance. */}
-      <RevealGroup className="gallery-grid" stagger={0.05} key={filter}>
+      {/* The lead photo doubles up (2×2) on desktop — but only when the count keeps every row full. */}
+      <RevealGroup
+        className={`gallery-grid${visible.length % 3 === 0 ? ' has-feature' : ''}`}
+        stagger={0.05}
+        key={filter}
+      >
         {visible.map((item, i) => (
           <RevealItem className="gallery-cell" key={item.src} y={18}>
             <button
@@ -135,8 +140,13 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
                   width={item.width}
                   height={item.height}
                   // Two columns up to 1080px, then a third of the page's 1280px-capped container —
-                  // never the raw vw-scaled width a wide monitor would otherwise request.
-                  sizes="(max-width: 1080px) 50vw, (max-width: 1328px) 33vw, 400px"
+                  // never the raw vw-scaled width a wide monitor would otherwise request. The
+                  // lead tile is full-width on tablets/phones and two-thirds wide on desktop.
+                  sizes={
+                    i === 0
+                      ? '(max-width: 1080px) 100vw, (max-width: 1328px) 66vw, 800px'
+                      : '(max-width: 1080px) 50vw, (max-width: 1328px) 33vw, 400px'
+                  }
                   quality={72}
                 />
               ) : (
