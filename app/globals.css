@@ -21,6 +21,7 @@
   --serif: var(--font-serif), Georgia, serif;
   --sans: var(--font-sans), system-ui, sans-serif;
   --mono: var(--font-mono), ui-monospace, monospace;
+  --hand: var(--font-hand), 'Segoe Script', 'Bradley Hand', cursive;
 
   --wrap: 1280px;
   --gutter: clamp(20px, 4vw, 48px);
@@ -220,24 +221,28 @@ blockquote em {
   position: fixed;
   inset: 0;
   z-index: 600;
-  background: var(--ink);
-  color: var(--cream);
+  background: var(--cream);
+  color: var(--plum);
   display: grid;
   place-content: center;
   justify-items: center;
-  gap: 26px;
+  gap: 14px;
+  padding: 0 var(--gutter);
 }
 
-.preloader .brand-mark {
-  font-size: 54px;
-  color: var(--cream);
+.preloader-script {
+  font: 400 clamp(2.6rem, 9vw, 4.6rem) / 1.3 var(--hand);
+  color: var(--plum);
+  white-space: nowrap;
+  /* Room for the script's swashes, which overhang its box and would be clipped. */
+  padding: 0 0.3em;
 }
 
-.preloader-line {
-  width: min(220px, 40vw);
-  height: 1px;
-  background: color-mix(in srgb, var(--cream) 45%, transparent);
-  transform-origin: 0 50%;
+.preloader-sub {
+  font: 400 10px var(--mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 /* ------------------------------ header + nav ------------------------------- */
@@ -644,52 +649,142 @@ blockquote em {
 }
 
 .hero-visual {
-  height: clamp(420px, 62vw, 620px);
   position: relative;
-  padding: 0 38px 0 18px;
 }
 
-.image-frame {
-  height: 100%;
+/* ---- The moodboard: her real parties, pinned up the way a designer plans a collection. ---- */
+.hero-board {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  aspect-ratio: 5 / 6.2;
+  margin-inline: auto;
+}
+
+.pin {
+  position: absolute;
+}
+
+.polaroid {
+  position: relative;
+  margin: 0;
+  padding: 3.2% 3.2% 0;
+  background: #fffdf9;
+  border-radius: 2px;
+  box-shadow:
+    0 1px 1px rgba(42, 37, 48, 0.06),
+    0 10px 22px -10px rgba(42, 37, 48, 0.28),
+    0 30px 60px -34px rgba(42, 37, 48, 0.45);
+  cursor: default;
+  will-change: transform;
+}
+
+.polaroid-photo {
+  position: relative;
+  display: block;
   overflow: hidden;
   background: var(--cream-deep);
-  border-radius: var(--radius);
 }
 
-.image-inner,
-.image-parallax {
-  height: 100%;
-  width: 100%;
-}
-
-.image-frame img {
-  width: 100%;
-  height: 112%;
+.polaroid-photo img {
   object-fit: cover;
-  display: block;
 }
 
-.vertical-label {
+.polaroid figcaption {
+  font: 400 clamp(14px, 1.2vw, 17px) / 1.1 var(--hand);
+  color: var(--ink-soft);
+  text-align: center;
+  padding: 0.55em 4px 0.75em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Washi tape holding each print to the board. */
+.tape {
   position: absolute;
-  right: 0;
-  top: 42%;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font: 400 9px var(--mono);
-  letter-spacing: 0.18em;
+  top: -11px;
+  left: 50%;
+  width: 34%;
+  height: 22px;
+  translate: -50% 0;
+  rotate: -4deg;
+  z-index: 2;
+  opacity: 0.82;
+  box-shadow: 0 1px 2px rgba(42, 37, 48, 0.08);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 4px, #000 calc(100% - 4px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 4px, #000 calc(100% - 4px), transparent 100%);
 }
 
-.vertical-label span {
-  color: var(--muted);
-  margin-top: 15px;
+.tape-rose {
+  background: repeating-linear-gradient(135deg, #e6c9ce 0 6px, #ddbcc2 6px 12px);
+}
+
+.tape-gold {
+  background: repeating-linear-gradient(135deg, #e3cfa6 0 6px, #d8c194 6px 12px);
+  rotate: 5deg;
+}
+
+/* A pen note in the margin. */
+.board-note {
+  position: absolute;
+  right: -2%;
+  bottom: -8%;
+  z-index: 6;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  margin: 0;
+  max-width: 62%;
+  font: 400 clamp(15px, 1.3vw, 18px) / 1.2 var(--hand);
+  color: var(--plum);
+  text-align: right;
+  rotate: -2deg;
+}
+
+.board-note svg {
+  flex-shrink: 0;
+  width: 44px;
+  height: 32px;
+  order: -1;
+  translate: 0 -18px;
+  fill: none;
+  stroke: var(--plum);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The hand-drawn underline that writes itself under "magic." */
+/* Shrink-wrapped to the word, so the stroke is sized to "magic." rather than the whole line. */
+.hero-magic {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-swash {
+  position: absolute;
+  left: -3%;
+  bottom: 0.02em;
+  width: 108%;
+  height: 0.3em;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hero-swash path {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 3;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
 }
 
 .hero-stamp {
   position: absolute;
-  /* Above .image-frame (z-index 1), which otherwise hides half the rotating ring. */
-  z-index: 2;
-  bottom: -30px;
-  left: -14px;
+  z-index: 5;
+  top: -5%;
+  right: -3%;
   width: 124px;
   height: 124px;
   border-radius: 50%;
@@ -832,16 +927,13 @@ blockquote em {
   padding-top: 14px;
 }
 
-/* Sections number themselves, so hiding one (e.g. reviews before real ones exist)
-   never leaves a gap in the sequence. */
-.site-shell {
-  counter-reset: section;
-}
-
+/* The brand's gold sparkle (as in the marquee) rather than 01/02/03 — the sections aren't a
+   sequence, so numbering them only added a template feel. */
 .section-kicker::before {
-  counter-increment: section;
-  content: counter(section, decimal-leading-zero);
-  margin-right: 1.6em;
+  content: '✦';
+  color: var(--gold);
+  margin-right: 1.1em;
+  letter-spacing: 0;
 }
 
 
@@ -1253,6 +1345,21 @@ blockquote em {
   font-size: 14px;
   line-height: 1.75;
   margin: 0 0 40px;
+}
+
+/* The founders sign off by hand, so a parent knows exactly who they'll be talking to. */
+.contact-copy > div p.signoff {
+  margin: -24px 0 40px;
+  font: 400 clamp(1.35rem, 2.2vw, 1.7rem) / 1.2 var(--hand);
+  color: var(--plum);
+  rotate: -1.5deg;
+  transform-origin: left center;
+}
+
+.signoff span {
+  display: block;
+  font-size: 0.72em;
+  color: var(--muted);
 }
 
 .enquiry {
@@ -1695,11 +1802,6 @@ body::before {
 }
 
 /* ----------------------------- hero additions ------------------------------ */
-.image-frame {
-  position: relative;
-  z-index: 1;
-}
-
 .hero-trust {
   list-style: none;
   display: grid;
@@ -1725,41 +1827,6 @@ body::before {
   font-size: 11px;
   line-height: 1.55;
   color: var(--muted);
-}
-
-.hero-glow {
-  position: absolute;
-  left: -14%;
-  top: -12%;
-  width: 78%;
-  height: 62%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(216, 191, 195, 0.75), rgba(216, 191, 195, 0) 68%);
-  filter: blur(14px);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.hero-sparkle {
-  position: absolute;
-  color: var(--gold);
-  z-index: 3;
-}
-
-.hero-sparkle-a {
-  width: 17px;
-  height: 17px;
-  right: 26px;
-  top: 8%;
-  animation: twinkle 3.6s ease-in-out infinite;
-}
-
-.hero-sparkle-b {
-  width: 12px;
-  height: 12px;
-  left: 4px;
-  bottom: 24%;
-  animation: twinkle 4.4s ease-in-out 0.8s infinite;
 }
 
 /* ---------------------------------- themes --------------------------------- */
@@ -1903,6 +1970,44 @@ body::before {
   animation: stage-caption 0.6s var(--ease);
 }
 
+/* Each theme's colour story, laid out like fabric swatches on a design board. */
+.theme-palette {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: -2px;
+}
+
+.theme-palette em {
+  font: 400 1.15rem / 1 var(--hand);
+  font-style: normal;
+  color: var(--muted);
+}
+
+.theme-swatches {
+  display: flex;
+}
+
+.theme-swatches i {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-left: -6px;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2.5px var(--cream),
+    inset 0 0 0 1px rgba(42, 37, 48, 0.1);
+}
+
+.theme-swatches i:first-child {
+  margin-left: 0;
+}
+
+.theme-swatches-inline {
+  display: none;
+}
+
 @keyframes stage-caption {
   from {
     opacity: 0;
@@ -1953,6 +2058,20 @@ body::before {
 
   .theme-note {
     font-size: 12.5px;
+  }
+
+  .theme-swatches-inline {
+    display: flex;
+    margin-top: 6px;
+  }
+
+  .theme-swatches-inline i {
+    width: 16px;
+    height: 16px;
+    margin-left: -3px;
+    box-shadow:
+      0 0 0 1.5px var(--cream),
+      inset 0 0 0 1px rgba(42, 37, 48, 0.1);
   }
 
   .theme-arrow {
@@ -2791,9 +2910,8 @@ body::before {
     margin-top: 12px;
   }
 
-  .hero-visual {
-    height: clamp(380px, 70vw, 520px);
-    padding-right: 34px;
+  .hero-board {
+    max-width: 520px;
   }
 
   .scroll-cue {
@@ -2965,28 +3083,41 @@ body::before {
     display: none;
   }
 
-  .hero-visual {
-    height: auto;
-    aspect-ratio: 4 / 5;
-    padding: 0;
+  .hero-board {
+    width: calc(100% - 8px);
+    margin-bottom: 64px;
   }
 
-  .vertical-label,
-  .hero-sparkle-b {
-    display: none;
+  .polaroid figcaption {
+    font-size: 13.5px;
   }
 
-  .hero-sparkle-a {
-    right: 12px;
-    top: -9px;
+  .tape {
+    top: -8px;
+    height: 16px;
+  }
+
+  .board-note {
+    right: 0;
+    bottom: -19%;
+    max-width: 78%;
+    font-size: 15px;
+  }
+
+  .board-note svg {
+    width: 34px;
+    height: 26px;
   }
 
   .hero-stamp {
-    left: auto;
-    right: 14px;
-    bottom: -34px;
-    width: 96px;
-    height: 96px;
+    top: -7%;
+    right: -2%;
+    width: 84px;
+    height: 84px;
+  }
+
+  .hero-stamp-ring text {
+    font-size: 9.5px;
   }
 
   .hero-stamp > span {

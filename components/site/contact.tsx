@@ -40,6 +40,9 @@ export function Contact() {
             Tell us a little about it. We&apos;ll take it from there — thoughtfully, creatively, and with a little
             bit of magic.
           </p>
+          <p className="signoff">
+            <span>with love,</span> Pakhi, Neeta &amp; Nikita
+          </p>
         </Reveal>
 
         <RevealGroup className="enquiry" stagger={0.07}>

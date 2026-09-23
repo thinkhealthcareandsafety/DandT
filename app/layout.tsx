@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { DM_Mono, DM_Sans, Playfair_Display } from 'next/font/google'
+import { DM_Mono, DM_Sans, La_Belle_Aurore, Playfair_Display } from 'next/font/google'
 import { siteUrl } from '@/lib/site'
 import './globals.css'
 
@@ -14,6 +14,9 @@ const playfair = Playfair_Display({
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
 
 const dmMono = DM_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono', display: 'swap' })
+
+// Ink-pen handwriting for the moodboard notes, captions and sign-offs — the human layer.
+const hand = La_Belle_Aurore({ subsets: ['latin'], weight: '400', variable: '--font-hand', display: 'swap' })
 
 export const metadata: Metadata = {
   metadataBase: siteUrl(),
@@ -74,7 +77,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${dmMono.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${dmMono.variable} ${hand.variable}`}>
       <body className="antialiased">
         <script
           type="application/ld+json"
