@@ -44,23 +44,6 @@ export const metadata: Metadata = {
     description: 'Beautifully considered celebrations across Pune, Dehradun and Lucknow.',
     images: ['/og.jpg'],
   },
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
-  },
 }
 
 // The site is light-only; tint the mobile browser bar to match the cream page.
