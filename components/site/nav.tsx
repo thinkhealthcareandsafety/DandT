@@ -49,7 +49,7 @@ export function Nav() {
         </div>
         <div className="nav-wrap">
         <a href="#top" className="brand" aria-label="Dreams and Themes home">
-          <span className="brand-mark">
+          <span className="brand-mark" aria-hidden="true">
             D<span>&amp;</span>T
           </span>
           <span className="brand-name">

@@ -1849,7 +1849,7 @@ blockquote em {
   gap: 26px;
 }
 
-.footer-cols h4 {
+.footer-cols h3 {
   font: 400 10px var(--mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -3697,7 +3697,7 @@ body::before {
     padding: 12px 0;
   }
 
-  .footer-cols h4 {
+  .footer-cols h3 {
     margin-bottom: 6px;
   }
 

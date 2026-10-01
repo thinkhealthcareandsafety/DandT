@@ -50,7 +50,7 @@ export function Footer() {
         <div className="footer-cols">
           {columns.map((column) => (
             <div key={column.title}>
-              <h4>{column.title}</h4>
+              <h3>{column.title}</h3>
               <ul>
                 {column.links.map((link) => (
                   <li key={link.label}>
@@ -61,7 +61,7 @@ export function Footer() {
             </div>
           ))}
           <div>
-            <h4>Reach us</h4>
+            <h3>Reach us</h3>
             <ul>
               <li>
                 <a href="tel:+919559507878">+91 95595 07878</a>

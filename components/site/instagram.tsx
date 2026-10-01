@@ -11,7 +11,7 @@ export function InstagramBand() {
       href="https://www.instagram.com/dreamsandthemespune/"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Follow Dreams and Themes on Instagram"
+      aria-label="Visit Instagram: follow Dreams and Themes"
      
     >
       <div className="ig-track" aria-hidden="true">
