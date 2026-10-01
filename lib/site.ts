@@ -1,4 +1,4 @@
-const FALLBACK_SITE_URL = 'https://dreamsandthemes.in'
+const FALLBACK_SITE_URL = 'https://www.dreamsandthemespune.com'
 
 /**
  * Tolerates the env var being blank or entered without a protocol, either of which

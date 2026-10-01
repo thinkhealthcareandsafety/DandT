@@ -1,8 +1,13 @@
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { DM_Mono, DM_Sans, La_Belle_Aurore, Playfair_Display } from 'next/font/google'
+import { LeadTracking } from '@/components/site/lead-tracking'
 import { siteUrl } from '@/lib/site'
 import './globals.css'
+
+const isProduction = process.env.NODE_ENV === 'production'
+const gaId = process.env.NEXT_PUBLIC_GA_ID?.trim()
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -30,7 +35,15 @@ export const metadata: Metadata = {
     'birthday party organiser Dehradun',
     'kids party decor Lucknow',
   ],
+  alternates: { canonical: '/' },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION?.trim() || undefined,
+    other: process.env.BING_SITE_VERIFICATION?.trim()
+      ? { 'msvalidate.01': process.env.BING_SITE_VERIFICATION.trim() }
+      : undefined,
+  },
   openGraph: {
+    url: '/',
     title: 'Dreams & Themes | Make room for magic.',
     description: 'Beautifully considered celebrations for the moments your family will remember forever.',
     type: 'website',
@@ -82,8 +95,10 @@ export default function RootLayout({
           }}
         />
         {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        {isProduction && <Analytics />}
+        {isProduction && gaId && <LeadTracking />}
       </body>
+      {isProduction && gaId && <GoogleAnalytics gaId={gaId} />}
     </html>
   )
 }
