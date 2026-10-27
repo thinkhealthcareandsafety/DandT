@@ -3789,3 +3789,340 @@ body::before {
     animation: none;
   }
 }
+
+/* --------------------------- services: closing card -------------------------- */
+/* Fills what's left of the last row, whatever number of services the owners list. */
+.service-fill-card {
+  position: relative;
+  height: 100%;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: clamp(24px, 3vw, 36px);
+  overflow: hidden;
+  color: #f8f4f0;
+  background: radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--rose) 30%, transparent), transparent 60%),
+    linear-gradient(140deg, var(--plum), var(--ink));
+}
+
+.service-fill-mark {
+  position: absolute;
+  top: clamp(22px, 3vw, 32px);
+  left: clamp(24px, 3vw, 36px);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--rose) 50%, transparent);
+  color: var(--rose);
+}
+
+.service-fill-title {
+  font: 400 clamp(1.5rem, 2.4vw, 2.1rem) / 1.05 var(--serif);
+  letter-spacing: -0.03em;
+}
+
+.service-fill-title em {
+  color: var(--rose);
+}
+
+.service-fill-copy {
+  max-width: 34ch;
+  font-size: 13px;
+  line-height: 1.65;
+  color: color-mix(in srgb, #f8f4f0 72%, transparent);
+}
+
+.service-fill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font: 500 11px var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rose);
+  transition: gap 0.4s var(--ease);
+}
+
+.service-fill-card:hover .service-fill-link {
+  gap: 10px;
+}
+
+.service-fill.fill-lg-0 {
+  display: none;
+}
+
+.service-fill.fill-lg-2 {
+  grid-column: span 2;
+}
+
+@media (max-width: 1080px) {
+  .service-fill.fill-lg-0,
+  .service-fill.fill-lg-2 {
+    display: block;
+    grid-column: auto;
+  }
+
+  .service-fill.fill-md-0 {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .service-fill.fill-md-0,
+  .service-fill.fill-md-1 {
+    display: block;
+  }
+
+  .service-fill.fill-sm-0 {
+    display: none;
+  }
+
+  .service-fill-card {
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+    border-radius: 10px;
+    padding: 18px 16px;
+  }
+
+  .service-fill-mark {
+    top: 16px;
+    left: 16px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .service-fill-copy {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
+
+/* ----------------------------- services: viewer ----------------------------- */
+/* A card with photos is a button: it opens them instead of jumping to the form. */
+button.service-card {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.service-view.service-count {
+  width: auto;
+  gap: 5px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font: 400 10.5px var(--mono);
+  letter-spacing: 0.06em;
+}
+
+.svc-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 550;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 28vw, 380px);
+  background: rgba(24, 20, 28, 0.95);
+  backdrop-filter: blur(6px);
+  color: #f8f4f0;
+}
+
+.svc-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: clamp(56px, 7vw, 84px) clamp(64px, 7vw, 100px);
+}
+
+.svc-photo {
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  touch-action: pan-y;
+}
+
+.svc-photo :is(img, video) {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100dvh - 2 * clamp(56px, 7vw, 84px));
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius);
+  background: #000;
+}
+
+.svc-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: clamp(72px, 9vw, 104px) clamp(24px, 2.6vw, 38px) 32px;
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
+  border-left: 1px solid color-mix(in srgb, #f8f4f0 10%, transparent);
+}
+
+/* The panel scrolls rather than squeezing its contents into each other on short screens. */
+.svc-panel > * {
+  flex-shrink: 0;
+}
+
+.svc-kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 400 10.5px var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rose);
+}
+
+.svc-icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--rose) 45%, transparent);
+}
+
+.svc-panel h2 {
+  font-size: clamp(2rem, 3vw, 2.7rem);
+  line-height: 1.02;
+}
+
+.svc-panel > p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: color-mix(in srgb, #f8f4f0 74%, transparent);
+}
+
+.svc-panel > .svc-caption {
+  min-height: 3.2em;
+  font-size: 12.5px;
+  color: color-mix(in srgb, #f8f4f0 58%, transparent);
+}
+
+.svc-caption b {
+  display: block;
+  margin-bottom: 4px;
+  font: 400 10.5px var(--mono);
+  letter-spacing: 0.12em;
+  color: var(--rose);
+}
+
+.svc-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
+  gap: 8px;
+}
+
+.svc-strip button {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background: color-mix(in srgb, #f8f4f0 8%, transparent);
+  opacity: 0.55;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: opacity 0.35s var(--ease), outline-color 0.35s var(--ease);
+}
+
+.svc-strip button img {
+  object-fit: cover;
+}
+
+.svc-strip button:hover,
+.svc-strip button.is-active {
+  opacity: 1;
+}
+
+.svc-strip button.is-active {
+  outline-color: var(--rose);
+}
+
+.svc-cta {
+  margin-top: auto;
+  justify-content: space-between;
+}
+
+.svc-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  font: 400 11px var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #f8f4f0 70%, transparent);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 3px;
+}
+
+@media (max-width: 900px) {
+  /* Phones: the photo on top, details scroll beneath it, thumbnails become a swipeable strip. */
+  .svc-viewer {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 58dvh) minmax(0, 1fr);
+  }
+
+  .svc-stage {
+    padding: 64px 12px 12px;
+  }
+
+  .svc-photo :is(img, video) {
+    max-height: calc(58dvh - 76px);
+  }
+
+  .svc-viewer .lightbox-nav {
+    display: none;
+  }
+
+  .svc-panel {
+    gap: 12px;
+    padding: 18px var(--gutter) calc(24px + env(safe-area-inset-bottom));
+    border-left: 0;
+    border-top: 1px solid color-mix(in srgb, #f8f4f0 10%, transparent);
+  }
+
+  .svc-panel h2 {
+    font-size: 1.9rem;
+  }
+
+  .svc-panel > .svc-caption {
+    min-height: 0;
+  }
+
+  .svc-strip {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 2px;
+  }
+
+  .svc-strip button {
+    flex: 0 0 58px;
+  }
+
+  .svc-cta {
+    margin-top: 6px;
+  }
+}

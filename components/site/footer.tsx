@@ -1,3 +1,5 @@
+import type { SiteContent } from '@/lib/content/types'
+import { displayPhone, instagramUrl, telLink } from '@/lib/whatsapp'
 import { Sparkle } from './decor'
 
 const columns = [
@@ -20,18 +22,15 @@ const columns = [
       { label: 'Questions', href: '#faq' },
     ],
   },
-  {
-    title: 'Cities',
-    links: [
-      { label: 'Pune', href: '#contact' },
-      { label: 'Dehradun', href: '#contact' },
-      { label: 'Lucknow', href: '#contact' },
-      { label: 'Outstation', href: '#contact' },
-    ],
-  },
 ]
 
-export function Footer() {
+export function Footer({ business }: { business: SiteContent['business'] }) {
+  const [lead, ...rest] = business.footerLine.split(/,\s*/)
+  const cities = {
+    title: 'Cities',
+    links: [...business.cities, 'Outstation'].map((city) => ({ label: city, href: '#contact' })),
+  }
+
   return (
     <footer className="site-footer">
       <div className="footer-top">
@@ -40,7 +39,8 @@ export function Footer() {
             D<span>&amp;</span>T
           </span>
           <p>
-            Curating joy, <em>one celebration at a time.</em>
+            {rest.length ? `${lead}, ` : lead}
+            {rest.length > 0 && <em>{rest.join(', ')}</em>}
           </p>
           <a className="footer-cta" href="#contact">
             Plan your celebration <Sparkle className="footer-spark" />
@@ -48,7 +48,7 @@ export function Footer() {
         </div>
 
         <div className="footer-cols">
-          {columns.map((column) => (
+          {[...columns, cities].map((column) => (
             <div key={column.title}>
               <h3>{column.title}</h3>
               <ul>
@@ -64,13 +64,13 @@ export function Footer() {
             <h3>Reach us</h3>
             <ul>
               <li>
-                <a href="tel:+919559507878">+91 95595 07878</a>
+                <a href={telLink(business.whatsapp)}>{displayPhone(business.whatsapp)}</a>
               </li>
               <li>
-                <a href="mailto:dreamsandthemespune@gmail.com">Email us</a>
+                <a href={`mailto:${business.email}`}>Email us</a>
               </li>
               <li>
-                <a href="https://www.instagram.com/dreamsandthemespune/" target="_blank" rel="noopener noreferrer">
+                <a href={instagramUrl(business.instagram)} target="_blank" rel="noopener noreferrer">
                   Instagram
                 </a>
               </li>
@@ -80,7 +80,9 @@ export function Footer() {
       </div>
 
       <div className="footer-base">
-        <span>© {new Date().getFullYear()} Dreams &amp; Themes · Pune</span>
+        <span>
+          © {new Date().getFullYear()} {business.name} · {business.cities[0]}
+        </span>
         <span>Birthday decor · Soft play · Theme parties</span>
         <span className="footer-credit">
           Made by <a href="mailto:sagarkadam8081@gmail.com">sagarkadam8081@gmail.com</a>

@@ -2,48 +2,39 @@
 
 import { ArrowUpRight, MapPin, Phone } from 'lucide-react'
 import { useState } from 'react'
+import type { SiteContent } from '@/lib/content/types'
+import { displayPhone, instagramUrl, telLink, whatsappLink } from '@/lib/whatsapp'
 import { DateField, displayDate } from './date-field'
 import { Magnetic } from './magnetic'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
 import { SelectField } from './select-field'
 
-const contacts = [
-  // Nikita is always listed first — she holds the largest stake in the business.
-  { name: 'Nikita', number: '8007000606' },
-  { name: 'Pakhi', number: '9559507878' },
-  { name: 'Neeta', number: '9623614682' },
-]
-
-const occasions = ['Birthday', 'Theme party', 'Soft play rental', 'Corporate / school', 'Something else']
-const cities = ['Pune', 'Dehradun', 'Lucknow', 'Outstation']
-
-export function Contact() {
+export function Contact({ data, business }: { data: SiteContent['contact']; business: SiteContent['business'] }) {
+  const occasions = data.occasions.length ? data.occasions : ['Birthday']
+  const cities = [...business.cities, 'Outstation']
   const [name, setName] = useState('')
   const [occasion, setOccasion] = useState(occasions[0])
   const [date, setDate] = useState('')
-  const [city, setCity] = useState('Pune')
+  const [city, setCity] = useState(cities[0])
 
   const message = `Hi Dreams & Themes! I'm ${name || '—'}. I'd like to plan a ${occasion.toLowerCase()} in ${city}${
     date ? ` on ${displayDate(date)}` : ''
   }. Could you share details?`
-  const whatsapp = `https://wa.me/919559507878?text=${encodeURIComponent(message)}`
+  const whatsapp = whatsappLink(business.whatsapp, message)
 
   return (
     <section className="contact section-pad" id="contact">
       <div className="contact-copy">
-        <Reveal className="section-kicker">Let&apos;s make it memorable</Reveal>
+        <Reveal className="section-kicker">{data.kicker}</Reveal>
         <h2>
-          <SplitHeading>Have a dream</SplitHeading>
+          <SplitHeading>{data.heading.line1}</SplitHeading>
           <br />
-          <SplitHeading delay={0.1}>in mind?</SplitHeading>
+          <SplitHeading delay={0.1}>{data.heading.line2}</SplitHeading>
         </h2>
         <Reveal delay={0.1}>
-          <p>
-            Tell us a little about it. We&apos;ll take it from there — thoughtfully, creatively, and with a little
-            bit of magic.
-          </p>
+          <p>{data.lede}</p>
           <p className="signoff">
-            <span>with love,</span> Nikita, Pakhi &amp; Neeta
+            <span>with love,</span> {data.signoff}
           </p>
         </Reveal>
 
@@ -76,7 +67,7 @@ export function Contact() {
                 <ArrowUpRight size={17} />
               </a>
             </Magnetic>
-            <small>Opens WhatsApp with your details filled in. No forms, no waiting.</small>
+            <small>{data.note}</small>
           </RevealItem>
         </RevealGroup>
 
@@ -84,7 +75,7 @@ export function Contact() {
           <>
             <MapPin size={17} />
             <span>
-              Available in Pune, Dehradun &amp; Lucknow
+              Available in {listCities(business.cities)}
               <br />
               <small>Outstation celebrations, too.</small>
             </span>
@@ -95,33 +86,38 @@ export function Contact() {
       <Reveal className="contact-card" delay={0.15} y={40}>
         <>
           <p className="card-label">Speak to our team</p>
-          {contacts.map((contact) => (
-            <a className="contact-row" href={`tel:+91${contact.number}`} key={contact.name}>
+          {business.contacts.map((contact, i) => (
+            <a className="contact-row" href={telLink(contact.number)} key={`${i}-${contact.name}`}>
               <span>
                 <strong>{contact.name}</strong>
-                <small>Celebration curator</small>
+                <small>{contact.role}</small>
               </span>
               <span className="phone-number">
-                +91 {contact.number.slice(0, 5)} {contact.number.slice(5)} <Phone size={15} />
+                {displayPhone(contact.number)} <Phone size={15} />
               </span>
             </a>
           ))}
-          <a href="mailto:dreamsandthemespune@gmail.com" className="button button-light">
+          <a href={`mailto:${business.email}`} className="button button-light">
             <span>Send an email</span>
             <ArrowUpRight size={17} />
           </a>
           <a
             className="social-line"
-            href="https://www.instagram.com/dreamsandthemespune/"
+            href={instagramUrl(business.instagram)}
             target="_blank"
             rel="noopener noreferrer"
-           
           >
             <span>Follow along</span>
-            <em>@dreamsandthemespune</em>
+            <em>@{business.instagram.replace(/^@/, '')}</em>
           </a>
         </>
       </Reveal>
     </section>
   )
+}
+
+/** "Pune, Dehradun & Lucknow" */
+function listCities(cities: string[]) {
+  if (cities.length < 2) return cities.join('')
+  return `${cities.slice(0, -1).join(', ')} & ${cities[cities.length - 1]}`
 }

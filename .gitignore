@@ -19,3 +19,10 @@ next-env.d.ts
 # Common ignores
 node_modules
 .DS_Store
+
+# Admin edits and uploads saved locally in development
+.data/
+
+.vercel
+.env*
+!.env.example

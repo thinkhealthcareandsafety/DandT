@@ -2,32 +2,12 @@
 
 import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
+import type { SiteContent } from '@/lib/content/types'
+import { jsonLd } from '@/lib/json-ld'
 import { Reveal, SplitHeading } from './reveal'
 
-const faqs = [
-  {
-    q: 'How far in advance should we book?',
-    a: 'Two to three weeks gives us room to design properly, source props and lock your date. Last-minute celebrations are often possible too — message us and we will tell you honestly what we can do.',
-  },
-  {
-    q: 'Do you travel outside Pune?',
-    a: 'Yes. We regularly style celebrations in Dehradun and Lucknow, and we take on outstation birthdays where we travel with the full set-up and team.',
-  },
-  {
-    q: 'What is included in the soft play rental?',
-    a: 'Clean, cushioned play zones sized for toddlers and young children — ball pits, soft blocks and play equipment, set up and sanitised before your guests arrive.',
-  },
-  {
-    q: 'Can you work in our home, society hall or a venue?',
-    a: 'All three. We have styled compact apartment set-ups, society clubhouses and full venue builds. Share photos of the space and we will design around it.',
-  },
-  {
-    q: 'How does the process start?',
-    a: 'Send us a message on WhatsApp with the date, the age and anything your child is loving right now. We come back with ideas and an estimate, then take it from there.',
-  },
-]
-
-export function Faq() {
+export function Faq({ data }: { data: SiteContent['faq'] }) {
+  const faqs = data.items
   const [open, setOpen] = useState<number | null>(0)
 
   return (
@@ -35,7 +15,7 @@ export function Faq() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: jsonLd({
             '@context': 'https://schema.org',
             '@type': 'FAQPage',
             mainEntity: faqs.map((faq) => ({
@@ -47,19 +27,16 @@ export function Faq() {
         }}
       />
       <div className="faq-head">
-        <Reveal className="section-kicker">Good to know</Reveal>
+        <Reveal className="section-kicker">{data.kicker}</Reveal>
         <h2>
-          <SplitHeading>Questions,</SplitHeading>
+          <SplitHeading>{data.heading.line1}</SplitHeading>
           <br />
           <em>
-            <SplitHeading delay={0.1}>answered.</SplitHeading>
+            <SplitHeading delay={0.1}>{data.heading.line2}</SplitHeading>
           </em>
         </h2>
         <Reveal delay={0.15}>
-          <p>
-            Still wondering about something? Message us — we would rather answer a small question than have you
-            guess.
-          </p>
+          <p>{data.intro}</p>
         </Reveal>
       </div>
 
@@ -67,7 +44,7 @@ export function Faq() {
         {faqs.map((faq, i) => {
           const isOpen = open === i
           return (
-            <div className={`faq-item${isOpen ? ' is-open' : ''}`} key={faq.q}>
+            <div className={`faq-item${isOpen ? ' is-open' : ''}`} key={`${i}-${faq.q}`}>
               <button onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen}>
                 <span className="faq-index">{String(i + 1).padStart(2, '0')}</span>
                 <span className="faq-q">{faq.q}</span>

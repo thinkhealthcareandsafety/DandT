@@ -2,9 +2,9 @@
 
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { useEffect, useState } from 'react'
+import { whatsappLink } from '@/lib/whatsapp'
 
 const message = "Hi Dreams & Themes! I'd love to plan a celebration. Could you share some details?"
-const href = `https://wa.me/919559507878?text=${encodeURIComponent(message)}`
 
 function WhatsAppGlyph() {
   return (
@@ -15,7 +15,8 @@ function WhatsAppGlyph() {
 }
 
 /** Floating WhatsApp shortcut — the main way families here actually enquire. */
-export function WhatsAppFab() {
+export function WhatsAppFab({ number }: { number: string }) {
+  const href = whatsappLink(number, message)
   const { scrollY } = useScroll()
   const [pastHero, setPastHero] = useState(false)
   const [atContact, setAtContact] = useState(false)

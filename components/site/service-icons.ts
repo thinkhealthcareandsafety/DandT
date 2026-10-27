@@ -1,0 +1,40 @@
+import {
+  Baby,
+  Brush,
+  Cake,
+  Camera,
+  Droplets,
+  Flower2,
+  Gift,
+  Heart,
+  type LucideIcon,
+  Music,
+  Palette,
+  PartyPopper,
+  Plane,
+  Scissors,
+  Sparkles,
+  Star,
+  UtensilsCrossed,
+} from 'lucide-react'
+import type { ServiceIcon } from '@/lib/content/types'
+
+/** The icons a service card can carry; the admin offers exactly these. */
+export const SERVICE_ICON_COMPONENTS: Record<ServiceIcon, LucideIcon> = {
+  cake: Cake,
+  party: PartyPopper,
+  droplets: Droplets,
+  baby: Baby,
+  gift: Gift,
+  brush: Brush,
+  plane: Plane,
+  palette: Palette,
+  scissors: Scissors,
+  flower: Flower2,
+  utensils: UtensilsCrossed,
+  sparkles: Sparkles,
+  camera: Camera,
+  music: Music,
+  heart: Heart,
+  star: Star,
+}

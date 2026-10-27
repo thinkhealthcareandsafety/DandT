@@ -16,22 +16,18 @@ import { Services } from '@/components/site/services'
 import { Showcase } from '@/components/site/showcase'
 import { Themes } from '@/components/site/themes'
 import { WhatsAppFab } from '@/components/site/whatsapp-fab'
-import { getGalleryItems } from '@/lib/gallery'
+import { getSiteContent } from '@/lib/content'
+import { instagramUrl } from '@/lib/whatsapp'
 import { getReviews } from '@/lib/reviews'
 
-const ticker = [
-  'Birthday Decorations',
-  'Soft Play Rentals',
-  'Theme Parties',
-  'Bubble House',
-  'Return Gifts',
-  'DIY Activities',
-  'Canvas Painting',
-  'Outstation Celebrations',
-]
+// Static, and rebuilt the moment an owner saves in /admin. The hourly refresh is only a safety net
+// in case storage was unreachable during a rebuild.
+export const revalidate = 3600
 
 export default async function Page() {
-  const [galleryItems, reviewData] = await Promise.all([getGalleryItems(), getReviews()])
+  const content = await getSiteContent()
+  const reviewData = await getReviews(content.reviews.items)
+  const { sections: show, business } = content
 
   return (
     <>
@@ -39,25 +35,25 @@ export default async function Page() {
       <Grain />
       <ScrollProgress />
 
-      <Nav />
+      <Nav business={business} sections={show} />
 
       <main className="site-shell">
-        <Hero />
-        <Marquee items={ticker} />
-        <Process />
-        <Themes />
-        <Services />
-        <Gallery items={galleryItems} />
-        <Showcase />
-        <Reviews data={reviewData} />
-        <Packages />
-        <Faq />
-        <InstagramBand />
-        <Contact />
+        <Hero hero={content.hero} />
+        {show.ticker && <Marquee items={content.ticker} />}
+        {show.process && <Process data={content.process} />}
+        {show.themes && <Themes data={content.themes} />}
+        {show.services && <Services data={content.services} whatsapp={business.whatsapp} />}
+        {show.gallery && <Gallery data={content.gallery} instagram={instagramUrl(business.instagram)} />}
+        {show.showcase && <Showcase data={content.showcase} />}
+        {show.reviews && <Reviews data={reviewData} copy={content.reviews} />}
+        {show.packages && <Packages data={content.packages} />}
+        {show.faq && <Faq data={content.faq} />}
+        {show.instagram && <InstagramBand handle={business.instagram} />}
+        <Contact data={content.contact} business={business} />
       </main>
 
-      <Footer />
-      <WhatsAppFab />
+      <Footer business={business} />
+      <WhatsAppFab number={business.whatsapp} />
     </>
   )
 }

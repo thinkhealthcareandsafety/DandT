@@ -1,179 +1,133 @@
 'use client'
 
-import {
-  ArrowUpRight,
-  Baby,
-  Brush,
-  Cake,
-  Droplets,
-  Gift,
-  Palette,
-  PartyPopper,
-  Plane,
-  Scissors,
-} from 'lucide-react'
-import Image, { type StaticImageData } from 'next/image'
-import beadAndNailBar from '@/public/gallery/bead-and-nail-bar.jpg'
-import ballPit from '@/public/gallery/ball-pit.jpg'
-import bubbleHouse from '@/public/gallery/10-bubble-house-balloons.jpg'
-import butterflyCentrepiece from '@/public/gallery/butterfly-centrepiece.jpg'
-import canvasPainting from '@/public/gallery/canvas-painting.jpg'
-import kpopArchEntrance from '@/public/gallery/kpop-arch-entrance.jpg'
-import neonGlow from '@/public/themes/neon-glow.jpg'
-import tattooArtistCorner from '@/public/gallery/12-tattoo-artist-corner.jpg'
-import whiteArchEntrance from '@/public/gallery/white-arch-entrance.jpg'
+import { ArrowUpRight, Images, MessageCircle } from 'lucide-react'
+import { useCallback, useState } from 'react'
+import type { SiteContent } from '@/lib/content/types'
+import { Photo } from './photo'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
+import { SERVICE_ICON_COMPONENTS } from './service-icons'
+import { ServiceViewer } from './service-viewer'
 
 /**
- * `image` is a real event photo — only set where one honestly represents that exact service.
- * Where none exists yet (return gifts, outstation), the card gets a tinted
- * gradient instead of a stock or AI photo, so nothing here misrepresents actual work.
- * Ordered so those three fall on a diagonal of the 3-up grid rather than bunching in one row.
+ * A card's photo is a real event photo — only set where one honestly represents that service.
+ * Where none exists yet, the card gets a tinted gradient with its icon instead of a stock or AI
+ * photo, so nothing here misrepresents actual work.
  */
-const services: {
-  title: string
-  copy: string
-  Icon: typeof Cake
-  image?: StaticImageData
-  tint: 'rose' | 'gold' | 'plum'
-}[] = [
-  {
-    title: 'Birthday Decorations',
-    copy: 'Balloon installations, floral styling and photo-ready backdrops.',
-    Icon: Cake,
-    image: whiteArchEntrance,
-    tint: 'rose',
-  },
-  {
-    title: 'Theme Parties',
-    copy: 'Fully art-directed worlds, built around what your child loves most.',
-    Icon: PartyPopper,
-    image: kpopArchEntrance,
-    tint: 'plum',
-  },
-  {
-    title: 'Bubble House',
-    copy: 'A giant balloon-filled dome the little ones can bounce and play inside.',
-    Icon: Droplets,
-    image: bubbleHouse,
-    tint: 'rose',
-  },
-  {
-    title: 'Soft Play Area',
-    copy: 'Clean, cushioned play zones designed for your littlest guests.',
-    Icon: Baby,
-    image: ballPit,
-    tint: 'gold',
-  },
-  {
-    title: 'Return Gifts',
-    copy: 'Curated and beautifully wrapped — never an afterthought.',
-    Icon: Gift,
-    image: butterflyCentrepiece,
-    tint: 'gold',
-  },
-  {
-    title: 'Tattoo Artist',
-    copy: 'Temporary art for tiny arms, on-site through the celebration.',
-    Icon: Brush,
-    image: tattooArtistCorner,
-    tint: 'gold',
-  },
-  {
-    title: 'Outstation Birthdays',
-    copy: 'We travel, we build, you simply arrive and celebrate.',
-    Icon: Plane,
-    image: neonGlow,
-    tint: 'plum',
-  },
-  {
-    title: 'Canvas Paintings',
-    copy: 'Guided painting corners that double as take-home keepsakes.',
-    Icon: Palette,
-    image: canvasPainting,
-    tint: 'plum',
-  },
-  {
-    title: 'DIY Activities',
-    copy: 'Hands-on craft stations that keep every age happily busy.',
-    Icon: Scissors,
-    image: beadAndNailBar,
-    tint: 'rose',
-  },
-]
+export function Services({ data, whatsapp }: { data: SiteContent['services']; whatsapp: string }) {
+  const [open, setOpen] = useState<number | null>(null)
+  const close = useCallback(() => setOpen(null), [])
 
-export function Services() {
-  const handleMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
     e.currentTarget.style.setProperty('--mx', `${e.clientX - rect.left}px`)
     e.currentTarget.style.setProperty('--my', `${e.clientY - rect.top}px`)
   }
 
+  const count = data.items.length
+  if (!count) return null
+
+  // The owners can list any number of services, so a closing card fills whatever is left of the
+  // last row at each breakpoint: 3 columns on desktop, 2 on tablets, and on phones the first card
+  // runs full width with the rest in pairs. Zero means the row is already full and it hides.
+  const fill = `service-fill fill-lg-${(3 - (count % 3)) % 3} fill-md-${(2 - (count % 2)) % 2} fill-sm-${(count - 1) % 2}`
+
   return (
     <section className="services section-pad" id="services">
       <div className="section-head">
         <div>
-          <Reveal className="section-kicker">Our specialties</Reveal>
+          <Reveal className="section-kicker">{data.kicker}</Reveal>
           <h2>
-            <SplitHeading>Everything for a</SplitHeading>
+            <SplitHeading>{data.heading.line1}</SplitHeading>
             <br />
             <em>
-              <SplitHeading delay={0.1}>day worth remembering.</SplitHeading>
+              <SplitHeading delay={0.1}>{data.heading.line2}</SplitHeading>
             </em>
           </h2>
         </div>
         <Reveal delay={0.15}>
-          <p>
-            From intimate home set-ups to destination birthdays, we bring the imagination, the polish, and the
-            calm.
-          </p>
+          <p>{data.intro}</p>
         </Reveal>
       </div>
 
       <RevealGroup className="service-grid" stagger={0.06}>
-        {services.map((service, i) => (
-          <RevealItem key={service.title}>
-            <a className="service-card" href="#contact" onMouseMove={handleMove}>
-              <span className="service-spotlight" aria-hidden="true" />
+        {data.items.map((service, i) => {
+          const Icon = SERVICE_ICON_COMPONENTS[service.icon] ?? SERVICE_ICON_COMPONENTS.sparkles
+          const media = service.media?.src ? service.media : undefined
+          const photos = service.photos?.filter((p) => p.media?.src).length ?? 0
+          // With photos, the card opens them; without, it goes straight to the enquiry form.
+          const Card = photos ? 'button' : 'a'
+          const cardProps = photos
+            ? { type: 'button' as const, onClick: () => setOpen(i), 'aria-label': `${service.title}: see ${photos} photos` }
+            : { href: '#contact' }
+          return (
+            <RevealItem key={`${i}-${service.title}`}>
+              <Card className="service-card" onMouseMove={handleMove} {...cardProps}>
+                <span className="service-spotlight" aria-hidden="true" />
 
-              <span className={`service-media${service.image ? '' : ' service-media-tint'}`} data-tint={service.tint}>
-                {service.image ? (
-                  <Image
-                    src={service.image}
-                    alt=""
-                    // Matches .service-media at each breakpoint: on phones the first card is full
-                    // width and the rest are half; 2-up on tablets; then a third of the page's
-                    // 1280px-capped container.
-                    sizes={
-                      i === 0
-                        ? '(max-width: 1080px) 100vw, (max-width: 1328px) 33vw, 400px'
-                        : '(max-width: 1080px) 50vw, (max-width: 1328px) 33vw, 400px'
-                    }
-                    quality={72}
-                    placeholder="blur"
-                  />
-                ) : (
-                  <service.Icon className="service-media-icon" size={56} strokeWidth={1} aria-hidden="true" />
-                )}
-                <span className="service-number">{String(i + 1).padStart(2, '0')}</span>
-                <span className="service-view">
-                  <ArrowUpRight size={16} strokeWidth={1.6} />
+                <span className={`service-media${media ? '' : ' service-media-tint'}`} data-tint={service.tint}>
+                  {media ? (
+                    <Photo
+                      media={media}
+                      alt=""
+                      fill
+                      // Matches .service-media at each breakpoint: on phones the first card is full
+                      // width and the rest are half; 2-up on tablets; then a third of the page's
+                      // 1280px-capped container.
+                      sizes={
+                        i === 0
+                          ? '(max-width: 1080px) 100vw, (max-width: 1328px) 33vw, 400px'
+                          : '(max-width: 1080px) 50vw, (max-width: 1328px) 33vw, 400px'
+                      }
+                      quality={72}
+                    />
+                  ) : (
+                    <Icon className="service-media-icon" size={56} strokeWidth={1} aria-hidden="true" />
+                  )}
+                  <span className="service-number">{String(i + 1).padStart(2, '0')}</span>
+                  {photos ? (
+                    <span className="service-view service-count">
+                      <Images size={13} strokeWidth={1.6} />
+                      {photos}
+                    </span>
+                  ) : (
+                    <span className="service-view">
+                      <ArrowUpRight size={16} strokeWidth={1.6} />
+                    </span>
+                  )}
                 </span>
-              </span>
 
-              <span className="service-body">
-                <span className="service-heading">
-                  <span className="service-icon">
-                    <service.Icon size={17} strokeWidth={1.3} />
+                <span className="service-body">
+                  <span className="service-heading">
+                    <span className="service-icon">
+                      <Icon size={17} strokeWidth={1.3} />
+                    </span>
+                    <span className="service-title">{service.title}</span>
                   </span>
-                  <span className="service-title">{service.title}</span>
+                  <span className="service-copy">{service.copy}</span>
                 </span>
-                <span className="service-copy">{service.copy}</span>
-              </span>
-            </a>
-          </RevealItem>
-        ))}
+              </Card>
+            </RevealItem>
+          )
+        })}
+        <RevealItem className={fill}>
+          <a className="service-fill-card" href="#contact">
+            <span className="service-fill-mark" aria-hidden="true">
+              <MessageCircle size={20} strokeWidth={1.3} />
+            </span>
+            <span className="service-fill-title">
+              Something else <em>in mind?</em>
+            </span>
+            <span className="service-fill-copy">
+              Tell us the idea — if it can be built, styled or hired for a party, we’ll find a way.
+            </span>
+            <span className="service-fill-link">
+              Ask us <ArrowUpRight size={15} />
+            </span>
+          </a>
+        </RevealItem>
       </RevealGroup>
+
+      <ServiceViewer service={open === null ? null : data.items[open]} index={open ?? 0} whatsapp={whatsapp} onClose={close} />
     </section>
   )
 }

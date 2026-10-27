@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // Instagram CDN, used only when INSTAGRAM_ACCESS_TOKEN is configured.
-    remotePatterns: [{ protocol: 'https', hostname: '*.cdninstagram.com' }, { protocol: 'https', hostname: '*.fbcdn.net' }],
+    // Photos uploaded from /admin live in Vercel Blob.
+    remotePatterns: [{ protocol: 'https', hostname: '*.public.blob.vercel-storage.com' }],
     // AVIF first (typically 20-30% smaller than WebP at equal quality), WebP as the fallback for
     // the handful of browsers without AVIF support. Sharp (present in node_modules) encodes both.
     formats: ['image/avif', 'image/webp'],

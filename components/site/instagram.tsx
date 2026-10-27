@@ -1,18 +1,17 @@
 'use client'
 
 import { ArrowUpRight } from 'lucide-react'
+import { instagramUrl } from '@/lib/whatsapp'
 
-const phrase = ['Follow the celebrations', '@dreamsandthemespune']
-
-export function InstagramBand() {
+export function InstagramBand({ handle }: { handle: string }) {
+  const phrase = ['Follow the celebrations', `@${handle.replace(/^@/, '')}`]
   return (
     <a
       className="ig-band"
-      href="https://www.instagram.com/dreamsandthemespune/"
+      href={instagramUrl(handle)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Visit Instagram: follow Dreams and Themes"
-     
     >
       <div className="ig-track" aria-hidden="true">
         {[0, 1].map((copy) => (

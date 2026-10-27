@@ -1,19 +1,13 @@
 import type { Review } from '@/lib/reviews'
 
 /**
- * PLACEHOLDER CONTENT — NOT REAL REVIEWS. DO NOT LAUNCH WITH THESE.
+ * PLACEHOLDER CONTENT — NOT REAL REVIEWS. Shown in development only, so the reviews layout can be
+ * designed before real ones exist; production never renders these.
  *
- * These entries exist only so the layout can be designed and reviewed. Publishing invented
- * customer reviews as genuine is deceptive and is prohibited in India under the CCPA
- * Guidelines for Prevention of Misleading Advertisements (2022) and BIS IS 19000:2022.
- *
- * Replace every entry below with words a real customer actually wrote — from WhatsApp,
- * Instagram DMs or Google — with their permission. Or better: set GOOGLE_PLACES_API_KEY and
- * GOOGLE_PLACE_ID in .env and the section will pull live Google reviews instead of this file,
- * and this file stops being used at all.
- *
- * Each entry needs: quote (their words), name (how they want to be credited),
- * meta (occasion and area, e.g. "1st birthday · Kothrud"), rating (1-5).
+ * Real reviews are added by the owners in /admin → Reviews, each with where the customer said it,
+ * or pulled live from Google by setting GOOGLE_PLACES_API_KEY and GOOGLE_PLACE_ID. Publishing
+ * invented reviews as genuine is prohibited in India under the CCPA Guidelines for Prevention of
+ * Misleading Advertisements (2022) and BIS IS 19000:2022.
  */
 export const PLACEHOLDER_REVIEWS: Review[] = [
   {

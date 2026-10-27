@@ -13,13 +13,22 @@ import {
   wrap,
 } from 'motion/react'
 import { useRef } from 'react'
+import type { SiteContent } from '@/lib/content/types'
 import type { Review, ReviewData } from '@/lib/reviews'
 import { Reveal, SplitHeading } from './reveal'
 
 // Percent of the track's width travelled per second — slow enough to actually read.
 const BASE_SPEED = 0.9
 
-function ReviewCard({ review, source }: { review: Review; source: ReviewData['source'] }) {
+const SOURCE_LABEL: Record<NonNullable<Review['source']>, string> = {
+  google: 'Google',
+  whatsapp: 'WhatsApp',
+  instagram: 'Instagram',
+  email: 'Email',
+  'in-person': '',
+}
+
+function ReviewCard({ review }: { review: Review }) {
   return (
     <article className="review-card">
       <span className="review-quote-mark" aria-hidden="true">
@@ -39,13 +48,15 @@ function ReviewCard({ review, source }: { review: Review; source: ReviewData['so
           <span className="review-name">{review.name}</span>
           <span className="review-meta">{review.meta}</span>
         </span>
-        {source === 'google' && <span className="review-source">Google</span>}
+        {review.source && SOURCE_LABEL[review.source] && (
+          <span className="review-source">{SOURCE_LABEL[review.source]}</span>
+        )}
       </footer>
     </article>
   )
 }
 
-export function Reviews({ data }: { data: ReviewData }) {
+export function Reviews({ data, copy }: { data: ReviewData; copy: SiteContent['reviews'] }) {
   const reduced = useReducedMotion()
   const paused = useRef(false)
 
@@ -79,18 +90,18 @@ export function Reviews({ data }: { data: ReviewData }) {
 
   if (!data.reviews.length) return null
 
-  const showRating = data.source === 'google' && data.average
+  const showRating = data.average
 
   return (
     <section className="reviews section-pad" id="reviews">
       <div className="section-head">
         <div>
-          <Reveal className="section-kicker">Kind words</Reveal>
+          <Reveal className="section-kicker">{copy.kicker}</Reveal>
           <h2>
-            <SplitHeading>What families</SplitHeading>
+            <SplitHeading>{copy.heading.line1}</SplitHeading>
             <br />
             <em>
-              <SplitHeading delay={0.1}>say afterwards.</SplitHeading>
+              <SplitHeading delay={0.1}>{copy.heading.line2}</SplitHeading>
             </em>
           </h2>
         </div>
@@ -108,7 +119,7 @@ export function Reviews({ data }: { data: ReviewData }) {
             </div>
           ) : (
             <p className="reviews-intro">
-              The part we care about most — what parents tell us once the balloons come down.
+              {copy.intro}
               <a href="#contact">
                 Plan yours <ArrowUpRight size={14} />
               </a>
@@ -133,10 +144,10 @@ export function Reviews({ data }: { data: ReviewData }) {
         }}
       >
         <motion.div className="reviews-track" style={reduced ? undefined : { x }}>
-          {[0, 1].map((copy) => (
-            <div className="reviews-set" key={copy} aria-hidden={copy === 1}>
+          {[0, 1].map((set) => (
+            <div className="reviews-set" key={set} aria-hidden={set === 1}>
               {data.reviews.map((review, i) => (
-                <ReviewCard review={review} source={data.source} key={`${copy}-${i}`} />
+                <ReviewCard review={review} key={`${set}-${i}`} />
               ))}
             </div>
           ))}

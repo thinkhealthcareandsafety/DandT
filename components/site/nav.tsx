@@ -3,17 +3,21 @@
 import { ArrowUpRight, MessageCircle, Phone, Sparkles } from 'lucide-react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { useEffect, useState } from 'react'
+import type { SectionId, SiteContent } from '@/lib/content/types'
+import { displayPhone, telLink, whatsappLink } from '@/lib/whatsapp'
 import { Magnetic } from './magnetic'
 
-const links = [
-  { label: 'Services', href: '#services' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Packages', href: '#packages' },
-  { label: 'How it works', href: '#process' },
+const allLinks: { label: string; href: string; section?: SectionId }[] = [
+  { label: 'Services', href: '#services', section: 'services' },
+  { label: 'Our work', href: '#gallery', section: 'gallery' },
+  { label: 'Packages', href: '#packages', section: 'packages' },
+  { label: 'How it works', href: '#process', section: 'process' },
   { label: 'Contact', href: '#contact' },
 ]
 
-export function Nav() {
+export function Nav({ business, sections }: { business: SiteContent['business']; sections: SiteContent['sections'] }) {
+  // A hidden section takes its menu link with it.
+  const links = allLinks.filter((link) => !link.section || sections[link.section])
   const { scrollY } = useScroll()
   const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -44,8 +48,8 @@ export function Nav() {
       >
         <div className="announcement">
           <Sparkles size={13} />
-          <span className="announcement-long">Thoughtfully planned celebrations, wherever you are.</span>
-          <span className="announcement-short">Thoughtfully planned celebrations</span>
+          <span className="announcement-long">{business.announcement}</span>
+          <span className="announcement-short">{business.announcement.split(/[,.—–]/)[0]}</span>
         </div>
         <div className="nav-wrap">
         <a href="#top" className="brand" aria-label="Dreams and Themes home">
@@ -117,17 +121,21 @@ export function Nav() {
               <div className="nav-overlay-actions">
                 <a
                   className="nav-overlay-wa"
-                  href="https://wa.me/919559507878?text=Hi%20Dreams%20%26%20Themes!%20I'd%20love%20to%20plan%20a%20celebration."
+                  href={whatsappLink(business.whatsapp, "Hi Dreams & Themes! I'd love to plan a celebration.")}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <MessageCircle size={17} /> WhatsApp us
                 </a>
-                <a className="nav-overlay-call" href="tel:+919559507878" aria-label="Call +91 95595 07878">
+                <a
+                  className="nav-overlay-call"
+                  href={telLink(business.whatsapp)}
+                  aria-label={`Call ${displayPhone(business.whatsapp)}`}
+                >
                   <Phone size={17} />
                 </a>
               </div>
-              <span>Pune · Dehradun · Lucknow</span>
+              <span>{business.cities.join(' · ')}</span>
             </motion.div>
           </motion.div>
         )}

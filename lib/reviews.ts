@@ -1,15 +1,12 @@
-export type Review = {
-  quote: string
-  name: string
-  meta: string
-  rating: number
-}
+import type { Review as OwnerReview } from '@/lib/content/types'
+
+export type Review = Pick<OwnerReview, 'quote' | 'name' | 'meta' | 'rating'> & { source?: OwnerReview['source'] }
 
 export type ReviewData = {
   reviews: Review[]
+  /** Only ever from Google — the site never shows a star average it can't source. */
   average: number | null
   total: number | null
-  source: 'google' | 'placeholder'
 }
 
 type PlacesReview = {
@@ -48,6 +45,7 @@ async function fetchGoogleReviews(): Promise<ReviewData | null> {
         name: review.authorAttribution?.displayName ?? 'Google reviewer',
         meta: review.relativePublishTimeDescription ?? 'Google review',
         rating: review.rating ?? 5,
+        source: 'google' as const,
       }))
       .filter((review) => review.quote.length > 0)
 
@@ -57,33 +55,28 @@ async function fetchGoogleReviews(): Promise<ReviewData | null> {
       reviews,
       average: data.rating ?? null,
       total: data.userRatingCount ?? null,
-      source: 'google',
     }
   } catch {
     return null
   }
 }
 
-export async function getReviews(): Promise<ReviewData> {
+/**
+ * Live Google reviews (when connected) followed by the real customer words the owners added in
+ * the admin. Development shows labelled placeholders when there are none, to design the layout;
+ * production never does — the section simply hides.
+ */
+export async function getReviews(ownerReviews: OwnerReview[]): Promise<ReviewData> {
   const google = await fetchGoogleReviews()
-  if (google) return google
+  const owners = ownerReviews.filter((review) => review.quote.trim() && review.name.trim())
+  const reviews = [...(google?.reviews ?? []), ...owners]
 
-  const { PLACEHOLDER_REVIEWS } = await import('@/content/reviews')
-
-  // Placeholder entries exist only to design the layout. Production drops them, so the
-  // section is hidden until real customer words are added — never shown as "Placeholder".
-  if (process.env.NODE_ENV === 'production') {
-    const real = PLACEHOLDER_REVIEWS.filter((review) => !isPlaceholder(review))
-    if (!real.length) {
-      console.warn(
-        '[reviews] No real reviews yet, so the reviews section is hidden. Add real customer words to ' +
-          'content/reviews.ts, or set GOOGLE_PLACES_API_KEY and GOOGLE_PLACE_ID.',
-      )
-    }
-    return { reviews: real, average: null, total: null, source: 'placeholder' }
+  if (!reviews.length && process.env.NODE_ENV !== 'production') {
+    const { PLACEHOLDER_REVIEWS } = await import('@/content/reviews')
+    return { reviews: PLACEHOLDER_REVIEWS.filter(isPlaceholder), average: null, total: null }
   }
 
-  return { reviews: PLACEHOLDER_REVIEWS, average: null, total: null, source: 'placeholder' }
+  return { reviews, average: google?.average ?? null, total: google?.total ?? null }
 }
 
 function isPlaceholder(review: Review) {

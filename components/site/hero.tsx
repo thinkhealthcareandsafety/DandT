@@ -2,25 +2,18 @@
 
 import { ArrowUpRight } from 'lucide-react'
 import { type MotionValue, motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
-import Image, { type StaticImageData } from 'next/image'
 import { useRef } from 'react'
-import pastelTunnel from '@/public/gallery/01-pastel-balloon-tunnel.jpg'
-import frozenStage from '@/public/gallery/frozen-elsa-stage.jpg'
-import magicShow from '@/public/gallery/magician-silks.jpg'
-import fairyGarden from '@/public/themes/fairy-garden.jpg'
+import type { HeroPin, SiteContent } from '@/lib/content/types'
 import { Magnetic } from './magnetic'
+import { Photo } from './photo'
 
 const ease = [0.16, 1, 0.3, 1] as const
 
 /**
- * The owner's own work, pinned up like a designer's moodboard. Every photo is from a real
- * Dreams & Themes party (colour-graded, names cropped out) — never stock or AI imagery.
- * x/y/w are percentages of the board; depth sets the scroll parallax.
+ * Where each of the four moodboard photos sits. The photos and captions come from the admin; this
+ * layout is designed, so it stays here. x/y/w are percentages of the board; depth sets the parallax.
  */
-const pins: {
-  src: StaticImageData
-  alt: string
-  caption: string
+const board: {
   x: number
   y: number
   w: number
@@ -28,92 +21,37 @@ const pins: {
   ratio: string
   depth: number
   tape: 'rose' | 'gold'
-  position?: string
 }[] = [
-  {
-    src: frozenStage,
-    alt: 'A Frozen stage with Elsa and Anna cut-outs and a lit number five',
-    caption: 'Frozen, turning five',
-    x: 0,
-    y: 6,
-    w: 47,
-    rotate: -6,
-    ratio: '4 / 5',
-    depth: 10,
-    tape: 'rose',
-  },
-  {
-    src: pastelTunnel,
-    alt: 'A pastel and gold balloon tunnel leading to a Happy Birthday backdrop',
-    caption: 'pastel & gold',
-    x: 45,
-    y: 0,
-    w: 43,
-    rotate: 4,
-    ratio: '3 / 4',
-    depth: 4,
-    tape: 'gold',
-    position: '50% 40%',
-  },
-  {
-    src: magicShow,
-    alt: 'A magician pulling rainbow silks from a newspaper as the birthday girl watches',
-    caption: 'the magic show',
-    x: 2,
-    y: 61,
-    w: 50,
-    rotate: 3,
-    ratio: '4 / 3',
-    depth: -6,
-    tape: 'gold',
-  },
-  {
-    src: fairyGarden,
-    alt: 'A lilac balloon arch with a fairy cut-out and a lit number one',
-    caption: 'fairy first birthday',
-    x: 55,
-    y: 53,
-    w: 41,
-    rotate: -3.5,
-    ratio: '4 / 5',
-    depth: 8,
-    tape: 'rose',
-  },
+  { x: 0, y: 6, w: 47, rotate: -6, ratio: '4 / 5', depth: 10, tape: 'rose' },
+  { x: 45, y: 0, w: 43, rotate: 4, ratio: '3 / 4', depth: 4, tape: 'gold' },
+  { x: 2, y: 61, w: 50, rotate: 3, ratio: '4 / 3', depth: -6, tape: 'gold' },
+  { x: 55, y: 53, w: 41, rotate: -3.5, ratio: '4 / 5', depth: 8, tape: 'rose' },
 ]
 
-function Pin({
-  pin,
-  index,
-  progress,
-}: {
-  pin: (typeof pins)[number]
-  index: number
-  progress: MotionValue<number>
-}) {
-  const y = useTransform(progress, [0, 1], ['0%', `${pin.depth * 3}%`])
+function Pin({ pin, index, progress }: { pin: HeroPin; index: number; progress: MotionValue<number> }) {
+  const place = board[index]
+  const y = useTransform(progress, [0, 1], ['0%', `${place.depth * 3}%`])
   return (
     <motion.div
       className="pin"
-      style={{ left: `${pin.x}%`, top: `${pin.y}%`, width: `${pin.w}%`, zIndex: index + 1, y }}
+      style={{ left: `${place.x}%`, top: `${place.y}%`, width: `${place.w}%`, zIndex: index + 1, y }}
     >
       <motion.figure
         className="polaroid"
-        initial={{ opacity: 0, y: -70, rotate: pin.rotate * 2.6, scale: 1.08 }}
-        animate={{ opacity: 1, y: 0, rotate: pin.rotate, scale: 1 }}
+        initial={{ opacity: 0, y: -70, rotate: place.rotate * 2.6, scale: 1.08 }}
+        animate={{ opacity: 1, y: 0, rotate: place.rotate, scale: 1 }}
         transition={{ type: 'spring', stiffness: 110, damping: 15, mass: 0.9, delay: 0.5 + index * 0.16 }}
         whileHover={{ rotate: 0, scale: 1.045, transition: { type: 'spring', stiffness: 260, damping: 20 } }}
       >
-        <span className={`tape tape-${pin.tape}`} aria-hidden="true" />
-        <span className="polaroid-photo" style={{ aspectRatio: pin.ratio }}>
-          <Image
-            src={pin.src}
+        <span className={`tape tape-${place.tape}`} aria-hidden="true" />
+        <span className="polaroid-photo" style={{ aspectRatio: place.ratio }}>
+          <Photo
+            media={pin.media}
             alt={pin.alt}
             fill
             priority={index < 2}
             sizes="(max-width: 1080px) 50vw, 300px"
             quality={75}
-            placeholder="blur"
-            style={{ objectPosition: pin.position }}
           />
         </span>
         <figcaption>{pin.caption}</figcaption>
@@ -122,7 +60,7 @@ function Pin({
   )
 }
 
-export function Hero() {
+export function Hero({ hero }: { hero: SiteContent['hero'] }) {
   const ref = useRef<HTMLElement>(null)
   const reduced = useReducedMotion()
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
@@ -144,7 +82,7 @@ export function Hero() {
             transition={{ duration: 0.9, delay: 0.4, ease }}
             style={{ originX: 0 }}
           />
-          Pune · Dehradun · Lucknow
+          {hero.eyebrow}
         </motion.p>
 
         <h1>
@@ -155,7 +93,7 @@ export function Hero() {
               animate={{ y: '0%' }}
               transition={{ duration: 1.1, delay: 0.42, ease }}
             >
-              Make room for
+              {hero.titleLine1}
             </motion.span>
           </span>
           <span className="line-mask hero-magic">
@@ -165,7 +103,7 @@ export function Hero() {
               animate={{ y: '0%' }}
               transition={{ duration: 1.1, delay: 0.54, ease }}
             >
-              <em>magic.</em>
+              <em>{hero.titleAccent}</em>
             </motion.span>
             {/* A pen stroke under the word, drawn on once the headline has landed. */}
             <svg className="hero-swash" viewBox="0 0 320 34" aria-hidden="true" preserveAspectRatio="none">
@@ -185,8 +123,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8, ease }}
         >
-          Frozen stages, K-pop arches, fairy gardens and soft-play kingdoms — dreamt up with you, built by hand,
-          and styled down to the last balloon.
+          {hero.lede}
         </motion.p>
 
         <motion.div
@@ -197,12 +134,12 @@ export function Hero() {
         >
           <Magnetic strength={0.28}>
             <a className="button button-dark" href="#contact">
-              <span>Start planning</span>
+              <span>{hero.primaryCta}</span>
               <ArrowUpRight size={17} />
             </a>
           </Magnetic>
           <a className="text-link" href="#gallery">
-            See our parties <span>↗</span>
+            {hero.secondaryCta} <span>↗</span>
           </a>
         </motion.div>
       </motion.div>
@@ -214,24 +151,18 @@ export function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 1.25, ease }}
       >
-        <li>
-          <strong>Set-ups from ₹7,000</strong>
-          <span>Transparent, itemised quotes</span>
-        </li>
-        <li>
-          <strong>One team, start to finish</strong>
-          <span>We design, build and clean up</span>
-        </li>
-        <li>
-          <strong>Soft play specialists</strong>
-          <span>Sanitised before every party</span>
-        </li>
+        {hero.trust.map((item) => (
+          <li key={item.title}>
+            <strong>{item.title}</strong>
+            <span>{item.copy}</span>
+          </li>
+        ))}
       </motion.ul>
 
       <div className="hero-visual">
         <div className="hero-board">
-          {pins.map((pin, i) => (
-            <Pin pin={pin} index={i} progress={scrollYProgress} key={pin.caption} />
+          {hero.pins.slice(0, board.length).map((pin, i) => (
+            <Pin pin={pin} index={i} progress={scrollYProgress} key={i} />
           ))}
 
           <motion.p
@@ -244,7 +175,7 @@ export function Hero() {
               <path d="M56 40 C 44 30, 34 14, 10 8" />
               <path d="M18 3 L 9 8 L 16 16" />
             </svg>
-            every photo here is a real party of ours
+            {hero.boardNote}
           </motion.p>
 
           <motion.div
@@ -269,11 +200,7 @@ export function Hero() {
                 </text>
               </svg>
             </motion.div>
-            <span>
-              For the little
-              <br />
-              <i>big days</i>
-            </span>
+            <StampLabel text={hero.stamp} />
           </motion.div>
         </div>
       </div>
@@ -289,5 +216,23 @@ export function Hero() {
         <i />
       </motion.a>
     </section>
+  )
+}
+
+/** "For the little big days" → "For the little" / "big days", the last two words in italic. */
+function StampLabel({ text }: { text: string }) {
+  const words = text.trim().split(/\s+/)
+  const tail = words.length > 2 ? words.slice(-2).join(' ') : ''
+  const head = tail ? words.slice(0, -2).join(' ') : text
+  return (
+    <span>
+      {head}
+      {tail && (
+        <>
+          <br />
+          <i>{tail}</i>
+        </>
+      )}
+    </span>
   )
 }

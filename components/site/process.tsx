@@ -3,28 +3,10 @@
 import { type MotionStyle, motion, useScroll, useTransform } from 'motion/react'
 import { useRef } from 'react'
 import { ArcLine } from './decor'
+import type { SiteContent } from '@/lib/content/types'
 import { Reveal, RevealGroup, RevealItem, SplitHeading } from './reveal'
 
-const steps = [
-  {
-    title: 'Tell us the dream',
-    copy: 'A message, a screenshot, “she’s obsessed with Frozen” — anything is enough to begin.',
-  },
-  {
-    title: 'We design it',
-    copy: 'Palette, props, play zones and the little surprises, planned to the last detail.',
-  },
-  {
-    title: 'We build it',
-    copy: 'Our team arrives, styles the space and handles everything on the day.',
-  },
-  {
-    title: 'You celebrate',
-    copy: 'You stay present with your people. We quietly take care of the rest.',
-  },
-]
-
-export function Process() {
+export function Process({ data }: { data: SiteContent['process'] }) {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.75', 'end 0.6'] })
   const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1])
@@ -34,12 +16,12 @@ export function Process() {
       <ArcLine className="process-arc" />
       <div className="process section-pad">
       <div className="process-heading">
-        <Reveal className="section-kicker">How it works</Reveal>
+        <Reveal className="section-kicker">{data.kicker}</Reveal>
         <h2>
-          <SplitHeading>From one WhatsApp message</SplitHeading>
+          <SplitHeading>{data.heading.line1}</SplitHeading>
           <br />
           <em>
-            <SplitHeading delay={0.1}>to the last balloon.</SplitHeading>
+            <SplitHeading delay={0.1}>{data.heading.line2}</SplitHeading>
           </em>
         </h2>
       </div>
@@ -50,8 +32,8 @@ export function Process() {
           <motion.span style={{ '--p': lineScale } as MotionStyle} />
         </div>
         <RevealGroup className="process-steps" stagger={0.12}>
-          {steps.map((step, i) => (
-            <RevealItem className="process-step" key={step.title}>
+          {data.steps.map((step, i) => (
+            <RevealItem className="process-step" key={`${i}-${step.title}`}>
               <span className="process-index">{String(i + 1).padStart(2, '0')}</span>
               <h3>{step.title}</h3>
               <p>{step.copy}</p>

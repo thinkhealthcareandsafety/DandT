@@ -1,12 +1,12 @@
 'use client'
 
 import { motion, useScroll, useTransform } from 'motion/react'
-import Image from 'next/image'
 import { useRef } from 'react'
-import heroImage from '@/public/dreams-hero.jpg'
+import type { SiteContent } from '@/lib/content/types'
+import { Photo } from './photo'
 import { SplitHeading } from './reveal'
 
-export function Showcase() {
+export function Showcase({ data }: { data: SiteContent['showcase'] }) {
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], ['-12%', '12%'])
@@ -17,16 +17,16 @@ export function Showcase() {
       <motion.div className="showcase-media" style={{ y }}>
         {/* Below the fold, always shown through a CSS grayscale+contrast filter and a dark veil —
             compression artifacts a viewer would never notice, so it can compress harder. */}
-        <Image src={heroImage} alt="" aria-hidden="true" sizes="100vw" quality={60} />
+        <Photo media={data.media} alt="" aria-hidden="true" sizes="100vw" quality={60} />
       </motion.div>
       <motion.div className="showcase-veil" style={{ opacity: overlay }} aria-hidden="true" />
       <div className="showcase-inner">
         <span className="quote-mark">“</span>
         <blockquote>
-          <SplitHeading>The smallest details often make</SplitHeading>
+          <SplitHeading>{data.heading.line1}</SplitHeading>
           <br />
           <em>
-            <SplitHeading delay={0.1}>the biggest memories.</SplitHeading>
+            <SplitHeading delay={0.1}>{data.heading.line2}</SplitHeading>
           </em>
         </blockquote>
         <motion.p
@@ -35,7 +35,7 @@ export function Showcase() {
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          — The Dreams &amp; Themes philosophy
+          {data.attribution}
         </motion.p>
       </div>
     </section>
